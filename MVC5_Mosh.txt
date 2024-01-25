@@ -25,5 +25,21 @@ What is Architectural Pattern?
 					-> Observer Pattern
 					
 					
+Creating .Net Framework Project with MVC:
+-----------------------------------------
+RouteConfig.cs in App_Start folder -> has the rules defined for route.
+Global.asax.cs -> class which hooks for various events in the application life cycle.
+					-> When the application starts, Application_start method starts execution and it does register some of the things like RegisterRoutes().
+					-> it basically tells the run time these are the routes for the application.
+
+Packages.config - similar to npm to manage dependent packages of our application.					
+				- all the dependent packages/libraries will be updated/managed by using packages.config
+
+Startup.cs - all the startup logic for the application will be moved to this file from .Net core, dropping Global.asax file.
+Web.config:
+------------
+		Mostly we will work only in 2 sections in this xml - ConnectionString (define DB connection) and AppSettings (define configuration settings for our application)			
+					
+					
 					
 					
