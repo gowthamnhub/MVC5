@@ -1,0 +1,29 @@
+MVC 5 Course from Mosh Hamedani
+--------------------------------
+What is MVC?
+------------
+	-> MVC is one of the Architectural Pattern for implementing user interfaces.
+	-> it stands for Model(data and business logic), View(UI), Controller(handles user input).
+	-> It always have another component which is not in the Acronym - "Router" which selects the right controller/action method to handle the request based on certain rules.
+	
+What is Architecture?
+-----------------------
+	-> Software architecture is high level structure of the system or blueprint of the system that outlines how different
+components of the system interact and work together to achieve the overall goals of the system.	
+	
+What is Architectural Pattern?
+-------------------------------
+	-> General design pattern helps to architecture the system in way to have better scalability, maintainability, flexibility and other desirable qualities to solve the common problem that occur, these guidelines are well tested over many years and developed by the community for solving commonly occuring problems.
+		Examples:
+					-> Layered Architecture
+					-> Client-Server Architecture
+					-> Model-View-Controller Architecture
+							-> MVC pattern says Router will select the controller/action based on the URI and pass the request to that particular action method, controller facilitates fetching the data (model) and passing the data to UI and return response.
+					-> Microservices Architecture
+					-> Event-Driven Architecture
+					-> Singleton Pattern
+					-> Observer Pattern
+					
+					
+					
+					
