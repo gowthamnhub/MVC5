@@ -27,19 +27,88 @@ What is Architectural Pattern?
 					
 Creating .Net Framework Project with MVC:
 -----------------------------------------
-RouteConfig.cs in App_Start folder -> has the rules defined for route.
+RouteConfig.cs -> in App_Start folder -> has the rules defined for route.
 Global.asax.cs -> class which hooks for various events in the application life cycle.
 					-> When the application starts, Application_start method starts execution and it does register some of the things like RegisterRoutes().
 					-> it basically tells the run time these are the routes for the application.
 
-Packages.config - similar to npm to manage dependent packages of our application.					
-				- all the dependent packages/libraries will be updated/managed by using packages.config
+Packages.config -> similar to npm to manage dependent packages of our application.					
+				-> all the dependent packages/libraries will be updated/managed by using packages.config
 
-Startup.cs - all the startup logic for the application will be moved to this file from .Net core, dropping Global.asax file.
-Web.config:
+Startup.cs -> all the startup logic for the application will be moved to this file from .Net core, dropping Global.asax file.
+Web.config: 
 ------------
 		Mostly we will work only in 2 sections in this xml - ConnectionString (define DB connection) and AppSettings (define configuration settings for our application)			
 					
-					
+We will start adding models (POCO - plain old clr or c# objects) which represents the state and behavior of our application in terms of the problem domain.	
+
+For eg:
+--------
+public class Movie //in this case it does not have any behavior, but only properties.
+{
+    public int Id { get; set; }
+    public string  Name { get; set; }
+}
+
+To make a controller to handle our request and return response, we have to add a controller file in controllers folder,
+for eg; MoviesController which is just another class but it becomes powerful when it derived from Controller class, because that provides the ability/methods for the MoviesController class to handle and responde to http request that are made to the ASP.Net MVC web site.
+
+	Example: Json(), View(), OnActionExecuting(),OnActionExecuted(), OnAuthentication(), OnException(), PartialView(), RedirectToAction(),RedirectToRoute()
+			Properties like Request (Gets HttpRequestBase object for current Http request), Response (Gets HttpResponseBase object for current HttpResponse), User (Gets user security information for current Http request) etc.,
+			
+	We can even place the controller class inside models, but recommended and most followed practice is to keep controller classes inside Controller folder.
+
+MoviesController:
+------------------
+  public class MoviesController : Controller
+  {
+      // GET: Movies
+      public ActionResult Index()
+      {
+          var movies = new List<Movie>()
+          {
+              new Movie { Id = 1, Name = "Shrek!" },
+              new Movie { Id = 2, Name = "Dark" },
+              new Movie { Id = 3, Name = "Just love!" }
+          };
+          
+          return View(movies);
+  }
+  
+ Corresponding View:
+------------------------
+@model IEnumerable<Vidly.Models.Movie>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movies List</h2>
+
+@foreach (var item in Model)
+{
+    <h5>@item.Name</h5>
+}
+
+
+To change theme of the default project:
+---------------------------------------
+	-> Go to Bootswatch.com -> Themes -> Select from multiple option. I select Pulse and downloaded Bootstrap.css file.
+	-> Renamed it as Bootstrap-pulse.cs and placed it in content folder where bootstrap files are present.
+	-> To make our project to use this Bootstrap-pulse.css file, go to RegsiterBundles in BundleConfig.cs -> where the client side files (js, css) are bundled so that in one http request all the files will be loaded without making multiple http request for each style/js files.
+	
+	There we can make the css style bundle to point to this new theme file.	Theme would be altered for the app.
+	
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap-minty.css",
+                      "~/Content/site.css"));
+ 
+ 
+ASP.Net MVC Fundamentals:
+--------------------------
+	
+
+	
+				
 					
 					
