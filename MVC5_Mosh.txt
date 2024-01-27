@@ -340,7 +340,83 @@ Exercise to show Customer, Movies link in NavBar and on click show respective cu
 		
 						Mosh - GitHub Link - https://github.com/mosh-hamedani/	
 
-						
+ENTITY FRAMEWORK:
+------------------
+	What is entity framework?
+		It is basically a Object/Relational Mapper(ORM) tool which means it maps data in a relational database into objects of our application.
+		Old days, this mapping of data to objects needed to be done manually by;
+			-> Opening a connection
+			-> Executing a command
+			-> Reading data
+			-> Form an object.
+			-> finally remembering to close the connection.
+			
+	With ORM, we don't have to do this steps anymore, it is automatically done for us by the framework, we work at a higher level of abstraction.
+		EF provides a called "DbContext" which is a gateway to our database.
+		
+			DbContext ----------> DbSet/s 
+			(database)			  (table)
+			
+		We use LINQ to query the DbSet, EF will translate it to SQL queries at run time which opens the Db connection, reads the data, maps it to objects and adds them to DbSet in DbContext.
+		
+	So when Add/Delete/Update to our DbSet, EF keeps track of these changes, once we ask for it to persist the changes, it will automatically generate the SQL statements and executes them on Database.
+
+	Two workflows to use EF;
+			-> Database First
+					- Traditional way to design database tables first and then have EF generate the corresponding domain classes.
+					----------------------------------
+					|Domain Classes <= EF <= Database|
+					----------------------------------
+			-> Code First
+					- This is opposite to above approach, we will create domain classes first, then have Entity Framework to generate DB tables. 
+					----------------------------------
+					|Domain Classes => EF => Database|
+					----------------------------------
+					
+		So as part of this course, we are going to take Code First approach and here are the reasons why?
+				-> Increases Productivity as we don't have to waste our time with table designers.\
+				-> its very much faster to write code.
+				-> when we have code first, we get full versioning of the database and can be migrated to any version any point in time. Since we use migrations in code first approach it is possible.
+				-> Much easier to build integration test db.
+		
+		Few misconceptions about Code First approach: (these are true myths)
+		---------------------------------------------	
+			-> This is only useful with new projects or greenfield projects.
+			-> If you have a application with existing database, code first do not work.
+			-> it does not give you full control over db.
+
+CODE FIRST MIGRATIONS:
+----------------------
+	What are migrations?
+	--------------------
+		-> In EF, migrations are the way to manage changes to the database schema over time. They provide a way to update the database to reflect the changes from data model (like adding/modifying columns or relationships).
+		-> It is simply a set of instructions, which tells how the database schema should be updated.
+		-> EF also keeps track of which migrations applied to the database, this version tracking helps ensure that the database schema is in sync with the application's data model.	
+		
+	Steps and flow:
+	---------------	
+		-> In Code first workflow, we start with code, everytime we modify our domain model by adding/modifying class, we create a migration and run it on the database.
+		
+		-> First install Entity Framework from Tools -> Nuget Package Manager -> Manage Nuget Packages for Solution -> 	  Search for Entity Framework -> install
+			
+		-> Before adding migration, we need to enable migrations by using "enable-migrations".
+		-> once enabled, Add-Migrations InitialModel(describing message about the change)
+		-> Adds a migration file in the "Migrations" folder - it clearly tells about the change - if it is createTable, or any other change, this file would be derived from DbMigration class which has methods to createTable, AddColumn, DropColumn etc.,
+		
+		-> To update database -use "update-database".\
+		-> pushes changes to the database/updates the database.
+		-> here in this case, click on "show all files" -> App_Data folder -> check the .mdf file created. where the tables are created.
+		
+		-> We can find our customers, movies table over there, also we can find another table _MigrationHistory which maintains the history of migrations applied on this database.
+			
+		-> With this Entity framework knows what version of database our application currently at.
+			
+	
+		
+		
+	
+		
+			
 
 	 
 
