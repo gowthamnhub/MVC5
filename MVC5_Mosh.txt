@@ -106,6 +106,249 @@ To change theme of the default project:
  
 ASP.Net MVC Fundamentals:
 --------------------------
+	ActionResult:
+	-------------
+		-> We can see that from action method, that it is returning ActionResult - what is it?
+		-> it is an abstract class having abstract method ExecuteResult()
+		-> basically it is derived by different result classes, viewResult, JsonResult, ContentResult, RedirectResult(to redirect to URI), RedirectToRouteResult(redirects to a route) etc.,
+		
+	But what does return View() do - we have not mentioned anywhere ViewResult? Then how does it return ViewResult object.
+	Actually there is a helper method defined in Controller class to return specific ActionResult object(since all viewResult, jsonResult, ContentResult etc., are derived from ActionResult).
+	
+	So, the code:
+						"return View(model);" 
+		returns a ViewResult object using the model that renders view to the response.
+
+See below eg; This code is from Controller class;
+--------------------------------------------------
+    protected internal virtual ViewResult View(string viewName, string masterName, object model)
+    {
+        if (model != null)
+        {
+            base.ViewData.Model = model;
+        }
+
+        return new ViewResult
+        {
+            ViewName = viewName,
+            MasterName = masterName,
+            ViewData = base.ViewData,
+            TempData = base.TempData,
+            ViewEngineCollection = ViewEngineCollection
+        };
+    }
+	
+So like this, for different types of ActionResult, there is a helper method present in Controller class like below;
+-----------------------------------------
+PartialViewResult - PartialView()
+ContentResult     - Content()
+RedirectResult    - Redirect()
+RedirectToRoute   - RedirectToAction()
+JsonResult        - Json()
+FileResult        - File()
+HttpNotFoundResult- HttpNotFound()
+EmptyResult       - no helper method (as per the course 2016)
+----------------------------------------
+
+If suppose we want to redirect request to different route/action/controller, we can do it like below;
+
+return RedirectToAction("Index", "Home", new { page = 1, sortBy = "name" });
+
+in this "new { page = 1, sortBy = "name" }" this portion is know as anonymous object.
+
+in the URI - it looks below; https://localhost:44318/?page=1&sortBy=name after redirection.
+
+Action Parameters:
+-------------------
+	--> ActionResult is the output from Action, Action Parameters is the input to the Action methods.
+	--> MVC Framework does the parameter binding automatically from URI to action parameters.
+For eg;
+------
+		https://localhost:44318/movies/edit/23?movieId=300 
+		This movieId will bind to the below action method;
+		 
+			public ActionResult Edit(int? movieId)
+			{
+				return Content(String.Format("id = {0}", movieId));
+			}
+			
+		but the same would not work when the request is simply; https://localhost:44318/movies/edit/300
+			as per the default route this is termed as {id}
+
+	See RouteConfig:
+	-----------------
+		routes.MapRoute(
+							name: "Default",
+							url: "{controller}/{action}/{id}",
+							defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+						);
+						
+		But if i make it changed to "{controller}/{action}/{movieId}"	- then it will work;
+		
+		But if suppose, we want to have our url like below;
+			
+		https://localhost:44318/movies/random/pageIndex=2&sortBy=Name
+		
+		When I have below action method, then above URI works.
+		
+				    public ActionResult Random(int? pageIndex, string sortBy)
+					{
+						return Content(String.Format("pageIndex = {0}, sortBy={1}", pageIndex.Value, sortBy));
+					}
+		
+But instead of query string if we want to call like; 		
+		
+		https://localhost:44318/movies/random/pageIndex/2/sortBy/Name
+		or 
+		https://localhost:44318/movies/random/2/Name
+		
+	These won't work as per our current route config, we have to have a custom route defined for handling these kind of URLs.	
+	Because the way the current routing works called as Conventional based routing.
+	
+	But when we have scenarios like to pass multiple parameters to fetch the data.
+	Suppose in our app, we want to fetch all the movies by release year and month like below;
+						
+						"/movies/released/2015/04"
+						
+	Custom route defined: it has multiple overloads, generally used one, name, url, defaults
+	---------------------
+		routes.MapRoute(
+						name: "ByReleaseDate",
+						url: "movies/released/{year}/{month}",
+						defaults: new
+						{
+							controller = "Movies", action = "ByReleaseDate", year = 2020, month = 01
+						},
+						
+						new {year = @"\d{4}", month=@"\d{1,2}"}
+						); 
+						
+		"new {year = @"\d{4}", month=@"\d{1,2}"}" --> constraints can be added in the route, here year should 	be 4 digits, month to have 1 or 2 digit.				
+		
+		The result URL: https://localhost:44318/movies/released/2022/14				
+
+Attribute Routing:
+------------------
+		In the above approach, we have just added just one custom route in RouteConfig, but overtime, there would be needing a lot of custom routes to be defined and this file would become messy and error prone as we are entering the hard coded string for action name, if at all we change the action name in the controller, this will cause issues. It becomes unmaintainable.
+		
+		Instead of this, we can give custom route defined just above the action method itself, so we won't have such above issues.
+
+		To use Attribute Routing, we need to enable it in RouteConfig.cs.
+					
+					routes.MapMvcAttributeRoutes();
+					
+		Above action method, we can use Route Attribute to provide the required url to hit the respective action.
+		Eg:
+		--
+			       [Route("movies/released/{year:min(1960):max(2023)}/{month:max(12)}")]
+					public ActionResult ByReleaseDate(int year, int month)
+					{
+						return Content($"year: {year}, month:{month}");
+					}
+					
+			We can also provide constraints in the route parameter by {year:min(1960)}/{month:max(12)}	
+
+				https://localhost:44318/movies/released/2024/12 - this does not work, says 404 - due to constraints specified as it works only from 1960 - 2023.
+
+Passing Data to Views:
+----------------------
+	Different ways of passing data to views, most easy and better one is pass it as model.
+	One of the early days of MVC, ViewDataDictionary was the one used for passing data from controller to views.
+	But since this is dynamic type, we have to do explicit casting in View to use it.
+	
+	ViewData: this comes from ControllerBase class.
+	---------
+	
+			@foreach (var item in (List<Movie>)ViewData["movies"])//explicit casting and same hard coded string.
+			{
+				<h5>@item.Name</h5>
+			}
+	From Controller: 
+	-----------------
+			public ActionResult Index()
+			{
+				var movies = new List<Movie>()
+				{
+					new Movie { Id = 1, Name = "Shrek!" },
+					new Movie { Id = 2, Name = "Dark" },
+					new Movie { Id = 3, Name = "Just love!" }
+				};
+			
+				ViewData["movies"] = movies;
+				
+				return View();
+			}
+	ViewBag: this also come from ControllerBase class - it is dynamic view data dictionary.
+	--------
+		@foreach (var item in ViewBag.movies)
+		{
+			<h5>@item.Name</h5>
+		}
+	From Controller:
+	----------------
+		 ViewBag.movies = movies; //instead of hard coded string, it is dynamic property, but here also if there are typo, no compile time check.
+		 
+Passing View Models to View:
+----------------------------
+			View Models are models specific to Views.
+			This generally goes to seperate folder (ViewModels) than Models. As models folder is specific to domain classes which is independent of UI.	
+					
+RazorView Syntax:
+------------------	
+		This helps writing C# syntax and html tags together.
+		Basically, the ViewEngine in the MVC called Razor View Engine knows how to parse the syntax and understand.
+
+								Example: (MoviesWithRentedCustomers.cshtml)
+								--------------------------------------------
+								@model Vidly.ViewModels.MovieCustomersViewModel
+								
+								@{
+									ViewBag.Title = "title";
+									Layout = "~/Views/Shared/_Layout.cshtml";
+								}
+								
+								<h2>@Model.Movie.Name</h2>
+								
+								<ul>
+									@foreach (var item in Model.Customers)
+									{
+										<li>@item.Name</li>
+									}
+								</ul>
+								
+Partial Views:
+---------------
+		Reusable views. Does not have a Layout.
+		General convention is to prefix partial view with "_" like "_Layout" , "_NavBar"
+
+Sample
+-------
+	 @Html.Partial("_NavBar");
+	 <div class="container body-content">
+		 @RenderBody()
+		 <hr />
+		 <footer>
+			 <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+		 </footer>
+	 </div>		
+	 
+But it looks like there is no distinction between partial view or regular views, it is just the convention and assumption made by the framework to locate the file and render.
+
+		@Html - HtmlHelper Property - it has some useful methods to create and render html elements in View.
+		
+Exercise to show Customer, Movies link in NavBar and on click show respective customer as link ->which redirects to details. But movie link is not a link, if we want we can make it.		
+		
+						Mosh - GitHub Link - https://github.com/mosh-hamedani/	
+
+						
+
+	 
+
+
+
+
+			
+			
 	
 
 	
