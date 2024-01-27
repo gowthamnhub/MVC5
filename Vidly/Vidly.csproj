@@ -134,8 +134,21 @@
     <Compile Include="Migrations\202401270436037_InitialModel.designer.cs">
       <DependentUpon>202401270436037_InitialModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202401270857546_Add-Membership-type-IsCustomerSubscribed.cs" />
+    <Compile Include="Migrations\202401270857546_Add-Membership-type-IsCustomerSubscribed.designer.cs">
+      <DependentUpon>202401270857546_Add-Membership-type-IsCustomerSubscribed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401270940248_PopulateMembershipType.cs" />
+    <Compile Include="Migrations\202401270940248_PopulateMembershipType.designer.cs">
+      <DependentUpon>202401270940248_PopulateMembershipType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401271001269_AppliedAnnotationToCustomerName.cs" />
+    <Compile Include="Migrations\202401271001269_AppliedAnnotationToCustomerName.designer.cs">
+      <DependentUpon>202401271001269_AppliedAnnotationToCustomerName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\MoviesControllerCopy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -236,6 +249,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202401270436037_InitialModel.resx">
       <DependentUpon>202401270436037_InitialModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401270857546_Add-Membership-type-IsCustomerSubscribed.resx">
+      <DependentUpon>202401270857546_Add-Membership-type-IsCustomerSubscribed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401270940248_PopulateMembershipType.resx">
+      <DependentUpon>202401270940248_PopulateMembershipType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401271001269_AppliedAnnotationToCustomerName.resx">
+      <DependentUpon>202401271001269_AppliedAnnotationToCustomerName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

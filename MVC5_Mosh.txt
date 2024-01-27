@@ -410,7 +410,91 @@ CODE FIRST MIGRATIONS:
 		-> We can find our customers, movies table over there, also we can find another table _MigrationHistory which maintains the history of migrations applied on this database.
 			
 		-> With this Entity framework knows what version of database our application currently at.
+	
+Changing the Model:
+--------------------
+	-> In the vidly app, right now the domain classes are very simple. 
+	-> if suppose we want to add few more properties to Customer, like (their MemberShipType, IsSubscribedToNewsletter).
+	-> MemberShipType can have information like SignUpFee, Duration, DiscountRate.
+	-> Each customer can have one and only MemberShipType.
+		
+		In this SignUpFee cannot be more than 32000$, for that we can have short type.
+		Duration - can be between 1-12 months - so byte type (-127 to +128)
+		DiscountRate - can be between (10% - 100%) so byte type.
+		Any entity in EF should have primary key, by convention it should be named Id or EntityName + Id.
+		Here in MemberShipType's "Id" can be of byte type as the MemberShipTypes would be 4 or 5 itself.	
+		
+		MemberShipType is known as Navigation property, because it allows us to navigate from one type to another, here from Customer type to its MemberShipType. 
+			-> its useful when we want to load an object and its related objects together from the database.
+			-> Here, we can load the customer and its MembershipType together.
+		If suppose we don't to load all the related objects together, for optimization purpose, we can have another property by naming convention - MemberShipTypeId - EF recognizes it as foreign key.	
+		
+						public byte MembershipTypeId { get; set; }
+		
+For making this changes, we will aim for small migrations and keep adding further, instead of making all these changes at once and going big migration which is error prone.
+
+Seeding the Database:
+---------------------
+		Seeding the data to the MemberShipType table as it do not have any records still.
+		Pay-as-you-go - Free, Monthly - 30$, Quarterly - 90$, Annually - 300$		
+
+						"Add-Migration PopulateMembershipType"
+		
+		In the Up method;
+			public override void Up()
+			{
+				Sql("INSERT INTO MembershipTypes(Id, SignUpFee, DurationInMonths, DiscountRate) VALUES(1,0,0,0)");
+				Sql("INSERT INTO MembershipTypes(Id, SignUpFee, DurationInMonths, DiscountRate) VALUES(2,30,1,10)");
+				Sql("INSERT INTO MembershipTypes(Id, SignUpFee, DurationInMonths, DiscountRate) VALUES(3,90,3,15)");
+				Sql("INSERT INTO MembershipTypes(Id, SignUpFee, DurationInMonths, DiscountRate) VALUES(4,300,12,20)");
+			}
 			
+						"update-database"
+						
+		If you notice in the Migration_History, we have all the migrations from start executed, in this way, we can have the Migration SQL script created by using a command in Package manager console to include all these migrations in single file and get it executed in a test/production environment as we have the scripts ready in hand with this versioning of migrations.
+		
+		If we do it manually, then we need to have it maintained somewhere or consolidated from multiple developers tpo get it executed in test or production environment. And you know its very tough.
+			
+			
+Overriding Conventions:
+-----------------------
+		Since, we have given Name property in Customer is string type - which is nullable, EF also generates it as a nullable field and nvarchar(max) length.
+		We can use DataAnnotations to override these conventions.
+		
+		After using DataAnnotations (Required, StringLength(255) on Name property) after add-migration, update-database
+		the database schema is updated with column name now have nullable: false, maxLength: 255
+		
+Querying objects:
+-----------------
+		Currently, the customer details are hardcoded in Customer controller and sent to view.
+		If we need to query the customers from Database, we will instantiate the VidlyDbContext (as this is the gateway to access our db tables).
+                                   var customers = _context.Customers;//deferred execution.
+								   
+				One thing to note here is when this line is executed, "_context.Customers" - it will not immediately fire queries to fetch data from db, instead it only fetch data when we iterate over.	
+					But if suppose, we have ; var customers = _context.Customers.ToList(); it fires the query immediately.
+					
+Eager Loading:
+--------------
+		If suppose in the above case, we have another column showing DiscountRate for the customer means, we have to have another column added in view, to get the data for that column, 
+		
+								"@item.MemberShipType.DiscountRate"	
+								
+				But when we do this, what happens is object reference exception. Why because when loading the Customer object, it does not load MemberShipType object.				
+		To make it load, we need to do something called - EagerLoading.
+		When loading customers, we have to use Include method from System.Data.Entity namespace.
+						
+						 var customers = _context.Customers.Include(x=> x.MembershipType).ToList();
+						 
+To create a shortcut for package manager console:
+--------------------------------------------------
+							Tools -> Options -> Environment -> Keyboard -> type packagemanagerconsole -> Press respective keys and Assign -> I assigned "ALT + Y" - it is working fine.
+							
+							
+							
+			
+			
+	
+	
 	
 		
 		
