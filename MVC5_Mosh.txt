@@ -489,6 +489,15 @@ To create a shortcut for package manager console:
 --------------------------------------------------
 							Tools -> Options -> Environment -> Keyboard -> type packagemanagerconsole -> Press respective keys and Assign -> I assigned "ALT + Y" - it is working fine.
 							
+Exercise 1:
+-----------
+	Instead of showing DiscountRate in Customers-> Index, show MemberShipType name (note we do not have name property in MemberShipType domain class)
+			-> Add Name property to MemberShipType class.
+			-> Add-Migration Added-Name-MembershipType
+			-> update-database
+			-> Add- Migration Update-MemberShipType-Name
+			-> Use SQL method in Up() method to provide update statement to update name for all membershiptypes.
+							
 							
 							
 			

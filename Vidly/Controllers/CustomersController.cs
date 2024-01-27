@@ -26,13 +26,13 @@ namespace Vidly.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            var customers = _context.Customers.Include(x=> x.MembershipType) .ToList();
+            var customers = _context.Customers.Include(x=> x.MembershipType).ToList();
             return View(customers);
         }
 
         public ActionResult Details(int id)
         {
-            var customer = _context.Customers.FirstOrDefault(c => c.Id == id);
+            var customer = _context.Customers.Include(x => x.MembershipType).FirstOrDefault(c => c.Id == id);
             return View(customer);
         }
     }
