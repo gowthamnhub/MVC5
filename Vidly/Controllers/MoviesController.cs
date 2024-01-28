@@ -60,8 +60,8 @@ namespace Vidly.Controllers
         {
             return Content($"year: {year}, month:{month}");
         }
-        [Route("movies/customers/{movieId}")]
 
+        [Route("movies/customers/{movieId}")]
         public ActionResult MoviesWithRentedCustomers(int movieId)
         {
             var movie = _context.Movies.FirstOrDefault(x => x.Id == movieId);

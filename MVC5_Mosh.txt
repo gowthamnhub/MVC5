@@ -499,8 +499,50 @@ Exercise 1:
 			-> Use SQL method in Up() method to provide update statement to update name for all membershiptypes.
 							
 							
-							
-			
+Exercise 2: 
+------------
+	Add Birthdate to Customer
+
+Exercise 3:
+------------
+	Display List of movies and their details (Release Date, Genre, Date Added).	
+
+Lets Add Forms:
+----------------
+	-> For Adding/Editing Customers/Movies.
+	-> For that first we need an action in Controller to bring the Create Form where user can enter their details like (Name, Birthdate, Subscribed to newsletter) fields for customers.
+    -> For movies it would be (Name, Genre, ReleaseDate, AddedDate, NumberInStock)	
+	
+	For Adding Customer, add an action method (create) in Customers Controller which returns a View(form).
+	View contains form controls for user to provide the details.
+	So in plain html, we use form tag -> input fields, labels.
+	Here in this, we can use Html helper methods to add html controls.
+	
+	Some of the html controls are; and in bootstrap it follows the certain classes to have it styled in modern manner.
+
+/*************************************************************************************************/	
+@using (Html.BeginForm("Create", "Customers"))//by using tag, it automatically closes </form> tag at the end.
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BirthDate)
+        @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control" })
+    </div>
+    <div class="form-check">
+        <label class="form-check-label">
+            @Html.CheckBoxFor(m => m.IsSubscribedToNewsletter, new {@class="form-check-input"})
+            @Html.LabelFor(m => m.IsSubscribedToNewsletter)
+        </label>
+    </div>
+}
+
+/*************************************************************************************************/	
+	
+For movies it would be (Name, Genre, ReleaseDate, AddedDate, NumberInStock)	
+	
 			
 	
 	
