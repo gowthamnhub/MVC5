@@ -553,6 +553,50 @@ When we add Display - DataAnnotations to provide display name for the field, the
 
 		
 		
+Drop-down Lists:
+-----------------
+	-> If we have to add a drop down for the customer form to select the respective MemberShipType (Pay-as-you-go, Quarterly, Monthly, Annually) a dropdown list.
+	-> Currently, the customer create form takes the customer model, which does not have the entity for MemberShipTypes, So basically we need a Customer entity as well as MemberShipTypes entity as well to Create form for Customer.
+	-> So lets add a ViewModel property which takes Customer and MemberShipType together.
+
+Example:
+---------
+ <div class="form-group">
+     @Html.LabelFor(m=> m.Customer.MembershipTypeId,
+ new {@class="pb-2"}) 
+     @Html.DropDownListFor(m=> m.Customer.MembershipTypeId, new SelectList(Model.MembershipTypes, "Id", "Name"), 
+         "Select Membership Type", 
+         new {@class = "form-select"})
+ </div>	
+
+						"class="form-select" makes the dropdown display properly."
+						
+Model Binding:
+---------------
+	MVC framework automatically binds the action parameters with the request data.
+	
+Saving Data:
+------------
+	Need to have a new action created to handle to post request - [HttpPost] to make sure this action method can be called via HttpPost not through Get request.
+	
+	-> As a best practice, if the action method does modify the data, it should never be accessible by HttpGet.
+	-> Once the payload is received, which is then mapped to the customer parameter. 
+	-> To add it to the database, we need to add it in the Customers DbSet in DbContext class.
+	-> Once it is added, then to persist/commit the changes to DB, use SaveChanges() method, which then collects all the changes done on the entity (modification, addition, deletion) and fires up the queries to make the changes to Database. 
+	-> This all things done under a transaction, so that if any fails, all changes gets rolled back.
+	
+See example below;
+-------------------	
+
+ [HttpPost]
+ public ActionResult Create(Customer customer)
+ {
+    _context.Customers.Add(customer);
+    _context.SaveChanges();
+    return RedirectToAction("Index");
+ }	
+ 
+ 
 	
 	
 	
