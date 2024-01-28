@@ -596,7 +596,31 @@ See example below;
     return RedirectToAction("Index");
  }	
  
- 
+ Editing Customer:
+ -----------------
+	-> Since we use the same view model (NewCustomerViewModel) as this form also will show same controls, customer data, Membership dropdown. We can rename the View model to little more generic as "CustomerFormViewModel".
+	-> As we already have a view to show these controls - "Create" for edit also we can use the same View with same controls just filled with existing data, so we can rename view name also to "CustomerForm" to be more generic for Create/Edit scenario.
+	-> And also the same for post method, as right now it is called as Create (HttpPost), we can have the method named as "Save" to be more generic for Create/Edit, we will just check if the customer payload has "id" value == 0 - then it goes add logic, else go to edit logic. Add the id property as hidden field in the "CustomerForm.cshtml"
+	
+See below example:
+-------------------
+        [HttpPost]
+        public ActionResult Save(Customer customer)
+        {
+            if(customer.Id == 0)
+                _context.Customers.Add(customer);
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+                //TryUpdateModel or autoMapper - but these updates entire model, sometimes we may need only specific properties to be updated
+                customerInDb.Name = customer.Name;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.BirthDate = customer.BirthDate;
+                customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }	
 	
 	
 	
