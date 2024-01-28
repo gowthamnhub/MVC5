@@ -543,7 +543,16 @@ Lets Add Forms:
 	
 For movies it would be (Name, Genre, ReleaseDate, AddedDate, NumberInStock)	
 	
+When we add Display - DataAnnotations to provide display name for the field, then we have to be aware of the fact that if we want to rename the label to show different way, then we have to rename it in model class and recompile the code and deploy for just label renaming.
+		In that case, we can go for plain label tag to provide the display text manually. But "for" attribute need to be manually entered to get that effect of on click of label the form control gets focus.
+
+			" <label for="BirthDate">Date of Birth</label> 
+			 @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control" }) "
 			
+		Here is the risk, if we don't give the BirthDate name properly, the effect of focus do not work properly.
+
+		
+		
 	
 	
 	
