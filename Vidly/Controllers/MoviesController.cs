@@ -43,6 +43,16 @@ namespace Vidly.Controllers
             //https://localhost:44318/?page=1&sortBy=name
         }
 
+        public ActionResult New()
+        {
+            var listOfGenre = _context.Genres.ToList();
+            MovieFormViewModel viewModel = new MovieFormViewModel()
+            {
+                Genres = listOfGenre
+            };
+            return View("MovieForm", viewModel);
+        }
+
         public ActionResult Edit(int? movieId)
         {
             return Content(String.Format("id = {0}", movieId));
@@ -73,6 +83,21 @@ namespace Vidly.Controllers
 
             return View(viewModel);
             //return PartialView("_NavBar");
+        }
+
+        public ActionResult Save(Movie movie)
+        {
+            if (movie.Id == 0)
+            {
+                _context.Movies.Add(movie);
+            }
+            else
+            {
+                //edit logic
+            }
+            
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

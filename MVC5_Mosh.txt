@@ -621,7 +621,20 @@ See below example:
             _context.SaveChanges();
             return RedirectToAction("Index");
         }	
+		
+Exercise:
+---------		
+	Similar have a Add new movie link in Movies list view, and on click of that -> open Add Movie form -> with controls, Name, Release Date, Genre (ddl), Number in Stock fields and save button.
 	
+		-> add the link added in Movies list view
+		-> add an action for New movie in movies controller
+		-> create the new movie form view with fields and button to save.
+		-> add a new action to save the new movie created.
+		-> Add Genre DbSet in DbContext.
+		
+	After all done, when saving it is giving EntityValidationError, though we enter all the fields in UI, I can see, we have DateAdded property is also required, but as per UI, we do not have that field, that should be the reason for this validation message, lets check in the next section video if he explains that.
+		-> We may need to add that property in UI or use Today property set everytime, we try to add a new movie.
+		
 	
 	
 		
