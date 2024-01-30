@@ -35,9 +35,10 @@ namespace Vidly.Controllers
         {
            
             var movies = _context.Movies.Include(x=> x.Genre).ToList();
-           // ViewData["movies"] = movies;
-            //ViewBag.movies = movies;
             return View(movies);
+
+            // ViewData["movies"] = movies;
+            //ViewBag.movies = movies;
             //return Content("Hello World!");
             //return RedirectToAction("Index", "Home", new { page = 1, sortBy = "name" });
             //https://localhost:44318/?page=1&sortBy=name
@@ -53,10 +54,15 @@ namespace Vidly.Controllers
             return View("MovieForm", viewModel);
         }
 
-        public ActionResult Edit(int? movieId)
+        public ActionResult Edit(int? Id)
         {
-            return Content(String.Format("id = {0}", movieId));
-
+            var movie = _context.Movies.Include(x => x.Genre).FirstOrDefault(x => x.Id == Id);
+            var viewModel = new MovieFormViewModel
+            {
+                Movie = movie,
+                Genres = _context.Genres.ToList()
+            };
+            return View("MovieForm", viewModel);
         }
 
         public ActionResult Details(int id)

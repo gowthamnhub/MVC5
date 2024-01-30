@@ -635,6 +635,40 @@ Exercise:
 	After all done, when saving it is giving EntityValidationError, though we enter all the fields in UI, I can see, we have DateAdded property is also required, but as per UI, we do not have that field, that should be the reason for this validation message, lets check in the next section video if he explains that.
 		-> We may need to add that property in UI or use Today property set everytime, we try to add a new movie.
 		
+	Edit Movie:
+	------------
+		Same MovieForm would be called from Edit Click -> Same MovieFormViewModel is passed back to Edit Action to show the same form with filled details.
+
+	Edit Action:
+	------------
+	   public ActionResult Edit(int? Id)
+       {
+           var movie = _context.Movies.Include(x => x.Genre).FirstOrDefault(x => x.Id == Id);
+           var viewModel = new MovieFormViewModel
+           {
+               Movie = movie,
+               Genres = _context.Genres.ToList()
+           };
+           return View("MovieForm", viewModel);
+       }
+	   
+	   In Movie Form:
+	   --------------
+					@if (Model.Movie != null)
+					{
+						<h2>
+							Edit Movie
+						</h2>
+					}
+					else
+					{
+						<h2>
+							New Movie
+						</h2>
+					}
+					
+	Still not able to save, due to some validation errors.					
+		
 	
 	
 		

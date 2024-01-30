@@ -1,0 +1,29 @@
+﻿@model Vidly.ViewModels.MovieFormViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Movie.Name</h2>
+
+@using (Html.BeginForm("Save", "Movies", FormMethod.Post))
+{
+    <div class="">
+        @Html.LabelFor(m=>m.Movie.Name, new { @class = "mb-1" })
+        @Html.TextBoxFor(m=> m.Movie.Name, new {@class= "form-control rounded-1" })
+    </div>
+    <div class="">
+        @Html.LabelFor(m=>m.Movie.ReleaseDate, new { @class = "mb-1" })
+        @Html.TextBoxFor(m=>m.Movie.ReleaseDate, "{0: dd-MM-yyyy}",new {@class= "form-control rounded-1" })
+    </div>
+    <div class="">
+        @Html.LabelFor(m=>m.Movie.Genre, new { @class = "mb-1" })
+        @Html.DropDownListFor(m=>m.Movie.Genre, new SelectList(Model.Genres, "Id", "Name", ""),
+    new {@class= "form-select rounded-1" })
+    </div>
+    <div class="">
+        @Html.LabelFor(m=>m.Movie.NumberInStock, new {@class="mb-1"})
+        @Html.TextBoxFor(m=>m.Movie.NumberInStock, new {@class= "form-control rounded-1" })
+    </div>
+    <button type="submit" class="btn btn-primary mt-2 rounded-1">Save</button>
+}

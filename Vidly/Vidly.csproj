@@ -166,9 +166,9 @@
     <Compile Include="Migrations\202401271637335_Populating-Genres.designer.cs">
       <DependentUpon>202401271637335_Populating-Genres.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202401271641152_DataAnnotation-Added-Movie-Properties.cs" />
-    <Compile Include="Migrations\202401271641152_DataAnnotation-Added-Movie-Properties.designer.cs">
-      <DependentUpon>202401271641152_DataAnnotation-Added-Movie-Properties.cs</DependentUpon>
+    <Compile Include="Migrations\202401300306325_Undoed GenreId to Movie Model.cs" />
+    <Compile Include="Migrations\202401300306325_Undoed GenreId to Movie Model.designer.cs">
+      <DependentUpon>202401300306325_Undoed GenreId to Movie Model.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -246,6 +246,7 @@
     <Content Include="Views\Customers\CustomerForm.cshtml" />
     <Content Include="Views\Customers\Edit.cshtml" />
     <Content Include="Views\Movies\MovieForm.cshtml" />
+    <Content Include="Views\Movies\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -305,8 +306,8 @@
     <EmbeddedResource Include="Migrations\202401271637335_Populating-Genres.resx">
       <DependentUpon>202401271637335_Populating-Genres.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202401271641152_DataAnnotation-Added-Movie-Properties.resx">
-      <DependentUpon>202401271641152_DataAnnotation-Added-Movie-Properties.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202401300306325_Undoed GenreId to Movie Model.resx">
+      <DependentUpon>202401300306325_Undoed GenreId to Movie Model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
