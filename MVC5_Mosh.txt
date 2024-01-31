@@ -725,7 +725,45 @@ Entity Validation Errors Resolved:
 						public int GenreId { get; set; }
 					}
 		
+Implementing Validations on Form:
+----------------------------------
+	Before Saving the data to database, we need to validate if the data / object is proper or without any errors as per our DataAnnotations set on the domain model entity. 
+	We can check that with the help of "ModelState" objects "IsValid" property, which checks any of the model property has any Errors or not, if it is then it returns "false", if it is valid then returns "true".
+	To show this in UI, we need to have a place holder added in the form - using @Html.ValidationMessageFor(m=> m.Customer.Name)
 	
+Customers Controller:
+----------------------	
+Save Method:
+=============
+        [HttpPost]
+        public ActionResult Save(Customer customer)
+        {
+            if (!ModelState.IsValid) //Checks if the model property has any error
+            {
+                var viewModel = new CustomerFormViewModel
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+
+                return View("CustomerForm", viewModel);
+            }
+
+            if(customer.Id == 0)
+                _context.Customers.Add(customer);
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+                //TryUpdateModel or autoMapper - but these updates entire model, sometimes we may need only specific properties to be updated
+                customerInDb.Name = customer.Name;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.BirthDate = customer.BirthDate;
+                customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+		
 	
 		
 		
