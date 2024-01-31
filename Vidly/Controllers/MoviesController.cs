@@ -95,11 +95,22 @@ namespace Vidly.Controllers
         {
             if (movie.Id == 0)
             {
+                movie.DateAdded = DateTime.Now;
+                //movie.Genre = _context.Genres.FirstOrDefault(x => x.Id == movie.GenreId); this is not needed.
                 _context.Movies.Add(movie);
             }
             else
             {
                 //edit logic
+                var movieInDb = _context.Movies.Include(m=> m.Genre).Single(m=> m.Id == movie.Id);
+                if (movieInDb != null)
+                {
+                     movieInDb.Name = movie.Name;
+                     movieInDb.GenreId = movie.GenreId;//_context.Genres.FirstOrDefault(x => x.Id == movie.GenreId);
+                     movieInDb.ReleaseDate = movie.ReleaseDate;
+                     movieInDb.NumberInStock = movie.NumberInStock;
+                     movieInDb.DateAdded = DateTime.Now;
+                }
             }
             
             _context.SaveChanges();

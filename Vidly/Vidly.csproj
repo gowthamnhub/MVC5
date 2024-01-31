@@ -170,6 +170,14 @@
     <Compile Include="Migrations\202401300306325_Undoed GenreId to Movie Model.designer.cs">
       <DependentUpon>202401300306325_Undoed GenreId to Movie Model.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202401301611441_Added GenreId property to Movie class.cs" />
+    <Compile Include="Migrations\202401301611441_Added GenreId property to Movie class.designer.cs">
+      <DependentUpon>202401301611441_Added GenreId property to Movie class.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs" />
+    <Compile Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.designer.cs">
+      <DependentUpon>202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Genre.cs" />
@@ -308,6 +316,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202401300306325_Undoed GenreId to Movie Model.resx">
       <DependentUpon>202401300306325_Undoed GenreId to Movie Model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401301611441_Added GenreId property to Movie class.resx">
+      <DependentUpon>202401301611441_Added GenreId property to Movie class.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.resx">
+      <DependentUpon>202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

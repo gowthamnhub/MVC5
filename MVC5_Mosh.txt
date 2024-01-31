@@ -667,7 +667,63 @@ Exercise:
 						</h2>
 					}
 					
-	Still not able to save, due to some validation errors.					
+	Still not able to save, due to some validation errors.		
+
+Entity Validation Errors Resolved:
+-----------------------------------
+	It was due to when Genre was required field, but from the form we get only GenreId, for that we have to remove the Required attribute for Genre property from Movie class and we will have a GenreId property added with the "same type" as in Genre class, then EF does not complain about the validation and it automatically resolves the value for GenreId to Genre property (from Id to actual object).	
+	
+	Save Action Method:
+	--------------------
+		public ActionResult Save(Movie movie)
+        {
+            if (movie.Id == 0)
+            {
+                movie.DateAdded = DateTime.Now;
+                //movie.Genre = _context.Genres.FirstOrDefault(x => x.Id == movie.GenreId); this is not needed.
+                _context.Movies.Add(movie);
+            }
+            else
+            {
+                //edit logic
+                var movieInDb = _context.Movies.Include(m=> m.Genre).Single(m=> m.Id == movie.Id);
+                if (movieInDb != null)
+                {
+                     movieInDb.Name = movie.Name;
+                     movieInDb.GenreId = movie.GenreId;//_context.Genres.FirstOrDefault(x => x.Id == movie.GenreId);
+                     movieInDb.ReleaseDate = movie.ReleaseDate;
+                     movieInDb.NumberInStock = movie.NumberInStock;
+                     movieInDb.DateAdded = DateTime.Now;
+                }
+            }
+            
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+		
+	Movie domain class:
+	-------------------
+				    public class Movie
+					{
+						public int Id { get; set; }
+						public string  Name { get; set; }
+						
+						[Required]
+						[Display(Name = "Release Date")]
+						public DateTime ReleaseDate { get; set; }
+						
+						[Required]//Actually this Required also can be removed as it is not a field in the form.
+						[Display(Name = "Date Added")]
+						public DateTime DateAdded { get; set; }
+						
+						[Required]
+						[Display(Name = "Number in Stock")]
+						public short NumberInStock { get; set; }  
+						
+						public Genre Genre { get; set; }
+						[Required]
+						public int GenreId { get; set; }
+					}
 		
 	
 	
