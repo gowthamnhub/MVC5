@@ -764,6 +764,58 @@ Save Method:
             return RedirectToAction("Index");
         }
 		
+Some DataAnnotations:
+----------------------
+[Range(1,10)]
+[Compare("Other Property")]
+[Phone][Email][Url]
+
+Custom Validation / Data Annotation
+------------------------------------
+If suppose I need a validation to be set for any customer to be on a membershiptype other than Pay-as-you-go, they should be atleast 18 years old.
+
+How can I do that?
+	-> Well, we can create a Custom DataAnnotation like 'Minimum18YearsAge' and apply it on birthdate property.
+	-> And how we will apply the validation logic to check if the membershiptype selected is Pay-as-you-go or other? 
+	-> For this we can check [Required] attribute is designed, "RequiredAttribute" is a class derived from "ValidationAttribute" class 	which is derived from "Attribute" class which is a abstract class.
+	
+Here is the class - "Minimum18YearsAge"
+
+namespace Vidly.Models
+{
+    public class Minimum18YearsAge : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            //check if the membership selected is pay-as-you-go, if not then check age limit, if yes, just return success
+            //so to check the other property here(MemberShipType), this valiationContext object helps.
+            var customer = (Customer)validationContext.ObjectInstance;
+            if (customer.MembershipTypeId == 0 || customer.MembershipTypeId == 1)
+                return ValidationResult.Success;
+
+            if (customer.BirthDate == null)
+                return new ValidationResult("Birth date is required");
+            var age = GetAgeFromBirthDate(customer.BirthDate);
+
+            if(age >= 18) return ValidationResult.Success;
+
+            return new ValidationResult("Age should be at least 18 years to be on a member");
+        }
+
+        private static int GetAgeFromBirthDate(DateTime ?customerBirthDate)
+        {
+           var age = DateTime.Today.Year - customerBirthDate.Value.Year;
+           if (DateTime.Today.Month < customerBirthDate.Value.Month) return age;
+           if (DateTime.Today.Day < customerBirthDate.Value.Day) return age;
+           age++;
+
+           return age;
+        }
+    }
+}	
+
+		
+		
 	
 		
 		
