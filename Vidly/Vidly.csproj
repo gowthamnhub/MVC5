@@ -178,6 +178,10 @@
     <Compile Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.designer.cs">
       <DependentUpon>202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202402070204484_VersionRevertedBackToTip.cs" />
+    <Compile Include="Migrations\202402070204484_VersionRevertedBackToTip.designer.cs">
+      <DependentUpon>202402070204484_VersionRevertedBackToTip.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Genre.cs" />
@@ -252,7 +256,7 @@
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Customers\Details.cshtml" />
     <Content Include="Views\Movies\Details.cshtml" />
-    <Content Include="Views\Customers\CustomerForm.cshtml" />
+    <Content Include="Views\Customers\Create.cshtml" />
     <Content Include="Views\Customers\Edit.cshtml" />
     <Content Include="Views\Movies\MovieForm.cshtml" />
     <Content Include="Views\Movies\Edit.cshtml" />
@@ -323,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.resx">
       <DependentUpon>202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202402070204484_VersionRevertedBackToTip.resx">
+      <DependentUpon>202402070204484_VersionRevertedBackToTip.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

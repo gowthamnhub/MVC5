@@ -27,7 +27,7 @@ namespace Vidly.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            var customers = _context.Customers.Include(x=> x.MembershipType).ToList();
+            var customers = _context.Customers.Include(x => x.MembershipType).ToList();
             return View(customers);
         }
 
@@ -37,17 +37,17 @@ namespace Vidly.Controllers
             return View(customer);
         }
 
-        public ActionResult New()
+        public ActionResult Create()
         {
             var membershipTypes = _context.MembershipTypes.ToList();
             var newCustomerViewModel = new CustomerFormViewModel()
             {
                 MembershipTypes = membershipTypes
             };
-            return View("CustomerForm", newCustomerViewModel);
+            return View(newCustomerViewModel);
         }
         [HttpPost]
-        public ActionResult Save(Customer customer)
+        public ActionResult Create([Bind(Exclude = "Id")] Customer customer)
         {
             if (!ModelState.IsValid)
             {
@@ -57,11 +57,26 @@ namespace Vidly.Controllers
                     MembershipTypes = _context.MembershipTypes.ToList()
                 };
 
-                return View("CustomerForm", viewModel);
+                return View(viewModel);
             }
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
-            if(customer.Id == 0)
-                _context.Customers.Add(customer);
+        [HttpPost]//Post does not seem to be supported from view, as formMethod I can set only to FormMethod.POST or FormMethod.GET
+        public ActionResult Update(Customer customer)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new CustomerFormViewModel
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+
+                return View("Edit", viewModel);
+            }
             else
             {
                 var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
@@ -83,7 +98,7 @@ namespace Vidly.Controllers
                 Customer = customer,
                 MembershipTypes = _context.MembershipTypes.ToList()
             };
-            return View("CustomerForm", viewModel);
+            return View(viewModel);
         }
     }
 }

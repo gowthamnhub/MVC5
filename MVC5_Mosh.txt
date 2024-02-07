@@ -814,6 +814,60 @@ namespace Vidly.Models
     }
 }	
 
+For resolving the issue with "The id field is required" validation in Save method, I splitted it to two actions - Create(POST) and Update(POST) - do note it is not [HttpPUT] as it did not work, as from client side, I can only set FormMethod.POST or FormMethod.GET.
+
+In POST, we can exclude Id property using [Bind(Exclude = "Id")] attribute.
+
+With this change, I tested Add and Edit scenarios, it is working as expected.
+
+	"Probably we need to check how/when do we use HttpPUT or HttpDelete action verbs in MVC actions?"
+	
+Controller:
+------------
+		[HttpPost]
+		public ActionResult Create([Bind(Exclude = "Id")] Customer customer)
+		{
+			if (!ModelState.IsValid)
+			{
+				var viewModel = new CustomerFormViewModel
+				{
+					Customer = customer,
+					MembershipTypes = _context.MembershipTypes.ToList()
+				};
+		
+				return View(viewModel);
+			}
+			_context.Customers.Add(customer);
+			_context.SaveChanges();
+			return RedirectToAction("Index");
+		}
+
+        [HttpPost]//Put does not seem to be supported from view, as formMethod I can set only to FormMethod.POST or FormMethod.GET
+        public ActionResult Update(Customer customer)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new CustomerFormViewModel
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+
+                return View("Edit", viewModel);
+            }
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+                //TryUpdateModel or autoMapper - but these updates entire model, sometimes we may need only specific properties to be updated
+                customerInDb.Name = customer.Name;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.BirthDate = customer.BirthDate;
+                customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }	
+	
 		
 		
 	
