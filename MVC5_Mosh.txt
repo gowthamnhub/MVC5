@@ -899,9 +899,41 @@ Movie.cs
         [DateShouldBeAtleast2MonthsOld]
         [Display(Name = "Release Date")]
         public DateTime ReleaseDate { get; set; }
-
 		
-	
+Refactoring Magic Numbers:
+--------------------------
+		The hard coded numbers used in AgeShouldBe18Years validation to be on a Membership. (0 or 1) return success, else validate if the customer is above 18 years and return true or false.
+		Just add two fields as Unknown, PayAsYouGo as static members in MembershipType class -> use it in the Custom Validation. 
+
+Minimum18YearsAge:
+-------------------		
+public class Minimum18YearsAge : ValidationAttribute
+ {
+   protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+   {
+     -------------------------
+     if (customer.MembershipTypeId == MembershipType.Unknown ||
+         customer.MembershipTypeId == MembershipType.PayAsYouGo) return ValidationResult.Success;
+
+     -------------
+	 -------------
+	 -------------
+
+     return new ValidationResult("Age should be at least 18 years to be on a member");
+   }
+}
+
+MembershipType class:
+----------------------
+ public class MembershipType
+ {
+   public byte Id { get; set; }
+   ----------------
+   ----------------
+   ----------------
+   public static readonly byte Unknown = 0;
+   public static readonly byte PayAsYouGo = 1;
+ }
 		
 		
 	
