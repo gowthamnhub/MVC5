@@ -12,7 +12,8 @@ namespace Vidly.Models
     {
         public int Id { get; set; }
         public string  Name { get; set; }
-        [Required]
+        
+        [DateShouldBeAtleast2MonthsOld]
         [Display(Name = "Release Date")]
         public DateTime ReleaseDate { get; set; }
 

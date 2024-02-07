@@ -93,28 +93,38 @@ namespace Vidly.Controllers
 
         public ActionResult Save(Movie movie)
         {
-            if (movie.Id == 0)
+            if (ModelState.IsValid)
             {
-                movie.DateAdded = DateTime.Now;
-                //movie.Genre = _context.Genres.FirstOrDefault(x => x.Id == movie.GenreId); this is not needed.
-                _context.Movies.Add(movie);
-            }
-            else
-            {
-                //edit logic
-                var movieInDb = _context.Movies.Include(m=> m.Genre).Single(m=> m.Id == movie.Id);
-                if (movieInDb != null)
+                if (movie.Id == 0)
                 {
-                     movieInDb.Name = movie.Name;
-                     movieInDb.GenreId = movie.GenreId;//_context.Genres.FirstOrDefault(x => x.Id == movie.GenreId);
-                     movieInDb.ReleaseDate = movie.ReleaseDate;
-                     movieInDb.NumberInStock = movie.NumberInStock;
-                     movieInDb.DateAdded = DateTime.Now;
+                    movie.DateAdded = DateTime.Now;
+                    //movie.Genre = _context.Genres.FirstOrDefault(x => x.Id == movie.GenreId); this is not needed.
+                    _context.Movies.Add(movie);
                 }
+                else
+                {
+                    //edit logic
+                    var movieInDb = _context.Movies.Include(m => m.Genre).Single(m => m.Id == movie.Id);
+                    if (movieInDb != null)
+                    {
+                        movieInDb.Name = movie.Name;
+                        movieInDb.GenreId = movie.GenreId; //_context.Genres.FirstOrDefault(x => x.Id == movie.GenreId);
+                        movieInDb.ReleaseDate = movie.ReleaseDate;
+                        movieInDb.NumberInStock = movie.NumberInStock;
+                        movieInDb.DateAdded = DateTime.Now;
+                    }
+                }
+
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+
+            var listOfGenre = _context.Genres.ToList();
+            MovieFormViewModel viewModel = new MovieFormViewModel()
+            {
+                Genres = listOfGenre
+            };
+            return View("MovieForm", viewModel);
         }
     }
 }

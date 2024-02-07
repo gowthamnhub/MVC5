@@ -872,6 +872,35 @@ Exercise:
 ----------
 			Try adding a Custom Validation Attribute for ReleaseDate - Cannot be future date.
 			Atleast 2months old movie only we can add and rent out. (DateShouldBeAtleast2MonthsOld)
+			
+Solution:
+----------
+using System;
+using System.ComponentModel.DataAnnotations;
+
+
+namespace Vidly.Models
+{
+  public class DateShouldBeAtleast2MonthsOld : ValidationAttribute
+  {
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+      if (value == null) return new ValidationResult("Release Date field is required");
+      var diff = DateTime.Today - (DateTime)value;
+      return diff.Days > 60
+        ? ValidationResult.Success
+        : new ValidationResult("Movie release date should be at least before 2 months");
+    }
+  }
+}
+
+Movie.cs
+--------
+        [DateShouldBeAtleast2MonthsOld]
+        [Display(Name = "Release Date")]
+        public DateTime ReleaseDate { get; set; }
+
+		
 	
 		
 		
