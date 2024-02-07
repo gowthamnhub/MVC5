@@ -934,6 +934,40 @@ MembershipType class:
    public static readonly byte Unknown = 0;
    public static readonly byte PayAsYouGo = 1;
  }
+ 
+ The same when trying via enum, it needs an extra casting to be done while comparison. 
+
+   protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+   {
+     -----------------
+	 -----------------
+ 
+     if (customer.MembershipTypeId == (byte)MembershipType.Type.Unknown ||
+         customer.MembershipTypeId == (byte)MembershipType.Type.PayAsYouGo) return ValidationResult.Success;
+
+    -----------------
+	-----------------
+
+     return new ValidationResult("Age should be at least 18 years to be on a member");
+   }
+   
+ MembershipType
+ --------------
+ public class MembershipType
+ {
+   public byte Id { get; set; }
+	------------
+	------------
+	------------
+    
+   public enum Type
+   {
+     Unknown = 0,
+     PayAsYouGo = 1,
+   }
+ }
+ 
+ But due to this extra casting, Mosh was saying he prefers the static field approach.
 		
 		
 	

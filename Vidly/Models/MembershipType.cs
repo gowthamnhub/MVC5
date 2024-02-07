@@ -16,5 +16,11 @@ namespace Vidly.Models
 
     public static readonly byte Unknown = 0;
     public static readonly byte PayAsYouGo = 1;
+
+    public enum Type
+    {
+      Unknown = 0,
+      PayAsYouGo = 1,
+    }
   }
 }
