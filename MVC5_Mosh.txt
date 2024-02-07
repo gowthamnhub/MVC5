@@ -867,6 +867,11 @@ Controller:
             _context.SaveChanges();
             return RedirectToAction("Index");
         }	
+		
+Exercise:
+----------
+			Try adding a Custom Validation Attribute for ReleaseDate - Cannot be future date.
+			Atleast 2months old movie only we can add and rent out. (DateShouldBeAtleast2MonthsOld)
 	
 		
 		
