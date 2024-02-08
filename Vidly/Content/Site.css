@@ -26,3 +26,8 @@ textarea {
 .field-validation-error {
     color: red;
 }
+
+.validation-summary-errors span{
+    color: red;
+}
+

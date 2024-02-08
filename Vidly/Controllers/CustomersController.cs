@@ -42,12 +42,13 @@ namespace Vidly.Controllers
             var membershipTypes = _context.MembershipTypes.ToList();
             var newCustomerViewModel = new CustomerFormViewModel()
             {
+                Customer = new Customer(),
                 MembershipTypes = membershipTypes
             };
             return View(newCustomerViewModel);
         }
         [HttpPost]
-        public ActionResult Create([Bind(Exclude = "Id")] Customer customer)
+        public ActionResult Create(Customer customer)
         {
             if (!ModelState.IsValid)
             {

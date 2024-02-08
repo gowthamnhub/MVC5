@@ -968,6 +968,51 @@ MembershipType class:
  }
  
  But due to this extra casting, Mosh was saying he prefers the static field approach.
+ 
+Validation Summary:
+-------------------
+	If we want a summary of all the validation errors to be displayed at the top / bottom (mostly at top) we can use ValidationSummary Html helper method.
+			@Html.ValidationSummary()
+			@Html.ValidationSummary(false, "Please fix the following errors")
+				-> false will show the property level validations in the top.
+				-> true will hide the individual property level validations in the summary, but if we have given @Html.ValidationFor method below each property, then we can see the validation messages below each control.
+				
+		One main thing is we have already noticed, Id field was coming as required and we tried splitting of Save to Create (exclude Id field here) and Update method, that Id field is required message we can see	in the ValidationSummary as well.
+
+			Actually that is due to when we generate the New Customer Form, the id field in the customer object is being set to empty string.(notice the value field)
+			
+			"<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Customer_Id" name="Customer.Id" type="hidden" value="" />"
+			
+	To resolve it, when we create the new customer form, in the view Model, we were only passing MembershipTypes
+
+								 public ActionResult Create()
+								 {
+									var membershipTypes = _context.MembershipTypes.ToList();
+									var newCustomerViewModel = new CustomerFormViewModel()
+									{
+										MembershipTypes = membershipTypes
+									};
+									return View(newCustomerViewModel);
+								 },
+									
+			We can initialize a new customer object and pass it in viewModel, to have the id field gets initialized to default 
+			value = 0.	
+
+								  public ActionResult Create()
+								  {
+									  var membershipTypes = _context.MembershipTypes.ToList();
+									  var newCustomerViewModel = new CustomerFormViewModel()
+									  {
+										  Customer = new Customer(),
+										  MembershipTypes = membershipTypes
+									  };
+									  return View(newCustomerViewModel);
+								  }
+		After this;
+		
+			<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Customer_Id" name="Customer.Id" type="hidden" value="0" />
+								
+								
 		
 		
 	
