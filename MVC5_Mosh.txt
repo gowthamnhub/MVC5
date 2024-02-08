@@ -1011,6 +1011,14 @@ Validation Summary:
 		After this;
 		
 			<input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Customer_Id" name="Customer.Id" type="hidden" value="0" />
+			
+Ok right now the Id field required is resolved, I don't see it anymore in the summary, so now again we will make our applicaiton to have same Save method for Create and Update scenario and to use same "CustomerForm.cshtml" instead of seperate ones to confirm we are not having issue anymore.
+
+		-> Rename "Create.cshtml" -> "CustomerForm.cshtml"
+		-> Make the create and edit action calls the same "CustomerForm.cshtml"		
+		-> From CustomerForm.cshtml -> submit -> Save method instead of Create/Update actions.
+
+		Yes, it is now working fine without any issues. Removed extra Update action, edit.cshtml file to keep the code base simple and clean.		
 								
 								
 		
