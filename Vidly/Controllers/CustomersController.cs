@@ -42,6 +42,7 @@ namespace Vidly.Controllers
     }
 
     [HttpPost]//Put does not seem to be supported from view, as formMethod I can set only to FormMethod.POST or FormMethod.GET
+    [ValidateAntiForgeryToken]
     public ActionResult Save(Customer customer)
     {
       if (!ModelState.IsValid)

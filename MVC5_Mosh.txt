@@ -1048,15 +1048,66 @@ How to enable Client side validation?
 
 		To be noted, this validation works only on the basic data annotations, if we have any custom validation this client side validation won't be applicable, if we need, then we have to write some jquery code but most of the cases for custom validation we will be using server side validation itself as that could be having some custom business logic to be validated.
 
+Anti-Forgery Tokens
+--------------------
+		What I understood is? This token helps in preventing the hacker to have the form submitted from other page, instead of from our application page (customer form, movie form), if it is allowed, then the hacker can create some users who are not actually the real customers and use the rental application illegally.
 		
-								
-								
+	But what does this token prevent?
+	-----------------------------------
+		it is C-S-R-F => Cross site request forgery (like a request is forged from third party site) as hacker can trick user to click on a image to take to different site, but the user is still having active session to our application and on load the hacker can have embedded Javascript code to fire up the api to create a customer.
 		
-		
+	How can it be prevented?
+	-------------------------
+		We can use a html helper method. @Html.AntiForgeryToken() in the form.
+		And also we need to decorate the Action method (Save) with [ValidateAntiForegeryToken]
 	
+	What does these do? how does this prevention works?	
+	----------------------------------------------------
+		Basically, it generates and saves the token in the hidden field inside the form using @Html.AntiForgeryToken())() method and the token is saved on the cookie in user machine as well. 
 		
+		During save, the cookie token and hidden field token gets compared and validated to ensure the request has come from the appropriate form and user computer, not from any third party site.
 		
+		Basically from third party site, the hacker will not have access to hidden field, due to that when there is a mismatch in the token, the site /request will not get succeeded.	
+								
+		
+	When the values are altered, we get following message, actually the token value in hidden field and cookie do not resemble to be same, but MVC framework does all these generation and validation of token logic to prevent CSRF attacks.
+
+			"The anti-forgery token could not be decrypted. If this application is hosted by a Web Farm or cluster, ensure that all machines are running the same version of ASP.NET Web Pages and that the <machineKey> configuration specifies explicit encryption and validation keys. AutoGenerate cannot be used in a cluster."
 	
+	Snippet:
+	---------
+		@using (Html.BeginForm("Save", "Customers"))
+		{
+			------------------------------
+			------------------------------
+			@Html.HiddenFor(m => m.Customer.Id);
+			<button class="btn btn-primary mt-2 rounded-2" type="submit">Save</button>
+		
+			@Html.AntiForgeryToken() //generates a token and save it in cookie as well as hidden field.
+		}
+		
+	In controller:
+	---------------
+		 [HttpPost]//Put does not seem to be supported from view, as formMethod I can set only to FormMethod.POST or FormMethod.GET
+		 [ValidateAntiForgeryToken] //DataAnnotation to validate the token between cookie and hidden field.
+		 public ActionResult Save(Customer customer)
+		 {
+			if (!ModelState.IsValid)
+			{
+				var viewModel = new CustomerFormViewModel
+				{
+				Customer = customer,
+				MembershipTypes = _context.MembershipTypes.ToList()
+				};
+			
+				return View("CustomerForm", viewModel);
+			}
+			---------------------------
+			---------------------------
+			---------------------------
+			_context.SaveChanges();
+			return RedirectToAction("Index");
+		 }
 		
 			
 
