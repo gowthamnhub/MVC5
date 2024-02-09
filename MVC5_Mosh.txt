@@ -1018,7 +1018,37 @@ Ok right now the Id field required is resolved, I don't see it anymore in the su
 		-> Make the create and edit action calls the same "CustomerForm.cshtml"		
 		-> From CustomerForm.cshtml -> submit -> Save method instead of Create/Update actions.
 
-		Yes, it is now working fine without any issues. Removed extra Update action, edit.cshtml file to keep the code base simple and clean.		
+		Yes, it is now working fine without any issues. Removed extra Update action, edit.cshtml file to keep the code base simple and clean.	
+
+Client Side Validation
+-----------------------
+	So far the validations that we have seen happens in the server side, which is absolutely crucial for building secure application.
+	It is nice to do validation on the client side as well.
+	Benefits of this:
+	------------------
+		-> Immediate feedback to the user, user do not have to wait for the round trip to the server.
+		-> No waste of server side resource just because user makes a mistake filling out form.
+		
+		So its better to do a basic validation in the client side so that the data is in right format before sending it to the server side to do the extra validation on the server side mainly for security purpose to prevent any malicious user sending invalid data by passing client side validation.
+
+By default, client side validation is not enabled in asp.net application, but why is it so?
+--------------------------------------------------------------------------------------------		
+		Basically it is due to ASP.NET applications have server side validations enabled by default, and can enable client side validations only if its needed.	
+		
+		As client side validations are not secure enough, it is not enabled by default.
+	
+How to enable Client side validation?
+--------------------------------------
+			@section scripts
+			{
+				@Scripts.Render("~/bundles/jqueryval");
+			}
+		
+		This takes the help of data annotations which basically have some data-val attributes added to the html elements to make use of jquery validation mechanism.
+
+		To be noted, this validation works only on the basic data annotations, if we have any custom validation this client side validation won't be applicable, if we need, then we have to write some jquery code but most of the cases for custom validation we will be using server side validation itself as that could be having some custom business logic to be validated.
+
+		
 								
 								
 		
