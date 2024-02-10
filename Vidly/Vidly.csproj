@@ -182,6 +182,10 @@
     <Compile Include="Migrations\202402070204484_VersionRevertedBackToTip.designer.cs">
       <DependentUpon>202402070204484_VersionRevertedBackToTip.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202402100133348_Made Name field a required, NumberInStock a int from short.cs" />
+    <Compile Include="Migrations\202402100133348_Made Name field a required, NumberInStock a int from short.designer.cs">
+      <DependentUpon>202402100133348_Made Name field a required, NumberInStock a int from short.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DateShouldBeAtleast2MonthsOld.cs" />
@@ -330,6 +334,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202402070204484_VersionRevertedBackToTip.resx">
       <DependentUpon>202402070204484_VersionRevertedBackToTip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202402100133348_Made Name field a required, NumberInStock a int from short.resx">
+      <DependentUpon>202402100133348_Made Name field a required, NumberInStock a int from short.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1110,6 +1110,16 @@ Anti-Forgery Tokens
 		 }
 		
 			
+Exercise:
+-----------
+	Implement the validations in Movie form, enable Client side validation, Validation Summary, AntiForgeryToken.
+	
+		-> check current way of working what are the validations exist?
+		-> enable Validation Summary?
+		-> Add Client side validation
+		-> enable AntiForgeryToken
+		
+		
 
 	 
 

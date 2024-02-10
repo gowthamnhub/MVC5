@@ -27,7 +27,7 @@ textarea {
     color: red;
 }
 
-.validation-summary-errors span{
+.validation-summary-errors li{
     color: red;
 }
 
