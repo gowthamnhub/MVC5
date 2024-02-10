@@ -1124,16 +1124,126 @@ Exercise:
 
 	why do we get this initial setting of default value? Because we set the new instance of movie object to MovieFormViewModel while calling NewMovie action, which does the automatic initialization of the properties to default values.
 	
-	But if we remove this instance from MovieFormViewModel, then we start getting "Id field is required validation". We need to assign some default value to the hidden field as well as need to avoid it showing in the form with default - 0.
-	
+	But if we remove this instance from MovieFormViewModel, then we start getting "Id field is required validation". We need to assign some default value to the hidden field as well as need to avoid it showing in the form with default - 0.	
 	
 		We can use this helper: "@Html.Hidden("Movie.Id", 0)" 
 		but the problem with this is obvious because of the hard coded magic string. 
 		
 	Then what can we do?
-		-> I can do fields nullable, from Movie domain class - Id - nullable, ReleaseDate nullable
+		-> I can do fields nullable, from Movie domain class - Id - nullable, ReleaseDate nullable, but this is not ideal scenario, releaseDate and Id cannot have null values as any record saved in DB must have an ID generated and the movie must have a ReleaseDate thats the real case scenario.
+		
+		So we need a viewModel where we can make these fields a nullable ones, in that way, we can make the new movie form loads fine without any default values and as we can decorate these fields with [Required] attribute we can make these fields when submit should be having a proper value.
+		
+		Lets try this.
+				-> Create a view model with these properties nullable and with required data annotations.
+				-> Yes it does work.
+				
+View Model Code:
+-----------------
+
+  public class MovieFormViewModel
+  {
+    public MovieFormViewModel()//when passing new instance, we set id to 0.
+    {
+      Id = 0;
+    }
+
+    public MovieFormViewModel(Movie movie) //this will be during edit scenario.
+    {
+      Id = movie.Id;
+      GenreId = movie.GenreId;
+      Name = movie.Name;
+      NumberInStock = movie.NumberInStock;
+      ReleaseDate = movie.ReleaseDate;
+    }
+	
+    public int? Id { get; set; }
+    [Required]
+    public string Name { get; set; }
+
+    [DateShouldBeAtleast2MonthsOld]
+    [Required]
+    [Display(Name = "Release Date")]
+    public DateTime? ReleaseDate { get; set; }
+
+    [Required]
+    [Display(Name = "Number in Stock")]
+    [Range(1, 20)]
+    public int? NumberInStock { get; set; }
+
+    [Required]
+    [Display(Name = "Genre")]
+    public int GenreId { get; set; }
+	
+    public IEnumerable<Genre> Genres { get; set; }
+  }			
+
+Movie Form
+-----------
+@using System.ServiceModel.Security.Tokens
+@model Vidly.ViewModels.MovieFormViewModel
+@{
+    ViewBag.Title = "MovieForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 
+
+<h2>
+    @Model.Title
+</h2>
+
+
+@using (Html.BeginForm("Save", "Movies", FormMethod.Post))
+{
+    @Html.ValidationSummary(false, "Please fix the following errors")
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control rounded-1 mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ReleaseDate)
+        @Html.TextBoxFor(m => m.ReleaseDate, "{0: dd/MM/yyyy}", new { @class = "form-control rounded-1 mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.ReleaseDate)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.GenreId)
+        @Html.DropDownListFor(m => m.GenreId,
+                                new SelectList(Model.Genres, "Id",
+                                    "Name"), "Select Genre",
+                                new { @class = "form-select mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.GenreId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NumberInStock)
+        @Html.TextBoxFor(m => m.NumberInStock, new { @class = "form-control rounded-1 mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.NumberInStock)
+    </div>
+    <button class="btn btn-primary rounded-2 mt-1 mb-1" type="submit">Save</button>
+    @Html.HiddenFor(m => m.Id)
+    @Html.AntiForgeryToken()
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval");
+}
+
+MovieFormViewModel
+-------------------
+
+namespace Vidly.ViewModels
+{
+  public class MovieFormViewModel
+  {
+    ----------------------------------
+	----------------------------------
+	----------------------------------
+
+    public string Title => Id == 0 ? "New Movie" : "Edit Movie"; //Added this property to return NewMovie or EditMovie string to be displayed in form.
+  }
+}
 
 
 			

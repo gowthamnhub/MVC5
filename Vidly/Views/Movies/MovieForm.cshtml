@@ -6,49 +6,49 @@
 }
 
 
-@if (Model.Movie != null)
-{
+@*@if (Model != null && Model.Id != 0)
+{*@
     <h2>
-        Edit Movie
+        @* Edit Movie*@
+        @Model.Title
     </h2>
-}
-else
+    @*//}*@
+@*else
 {
     <h2>
         New Movie
     </h2>
-}
-
-@Html.ValidationSummary(false, "Please fix the following errors")
+}*@
 
 @using (Html.BeginForm("Save", "Movies", FormMethod.Post))
 {
+    @Html.ValidationSummary(false, "Please fix the following errors")
     <div class="form-group">
-        @Html.LabelFor(m => m.Movie.Name)
-        @Html.TextBoxFor(m => m.Movie.Name, new { @class = "form-control rounded-1 mt-1 mb-1" })
-        @Html.ValidationMessageFor(m => m.Movie.Name)
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control rounded-1 mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.Name)
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Movie.ReleaseDate)
-        @Html.TextBoxFor(m => m.Movie.ReleaseDate, "{0: dd/MM/yyyy}", new { @class = "form-control rounded-1 mt-1 mb-1" })
-        @Html.ValidationMessageFor(m => m.Movie.ReleaseDate)
+        @Html.LabelFor(m => m.ReleaseDate)
+        @Html.TextBoxFor(m => m.ReleaseDate, "{0: dd/MM/yyyy}", new { @class = "form-control rounded-1 mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.ReleaseDate)
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Movie.Genre)
-        @Html.DropDownListFor(m => m.Movie.GenreId,
+        @Html.LabelFor(m => m.GenreId)
+        @Html.DropDownListFor(m => m.GenreId,
                                 new SelectList(Model.Genres, "Id",
                                     "Name"), "Select Genre",
                                 new { @class = "form-select mt-1 mb-1" })
-        @Html.ValidationMessageFor(m => m.Movie.GenreId)
+        @Html.ValidationMessageFor(m => m.GenreId)
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Movie.NumberInStock)
-        @Html.TextBoxFor(m => m.Movie.NumberInStock, new { @class = "form-control rounded-1 mt-1 mb-1" })
-        @Html.ValidationMessageFor(m => m.Movie.NumberInStock)
+        @Html.LabelFor(m => m.NumberInStock)
+        @Html.TextBoxFor(m => m.NumberInStock, new { @class = "form-control rounded-1 mt-1 mb-1" })
+        @Html.ValidationMessageFor(m => m.NumberInStock)
     </div>
     <button class="btn btn-primary rounded-2 mt-1 mb-1" type="submit">Save</button>
-    @Html.Hidden("Movie.Id",0);
-    //@Html.HiddenFor(m => m.Movie.Id)
+    //@Html.Hidden("Movie.Id",0);
+    @Html.HiddenFor(m => m.Id)
     @Html.AntiForgeryToken()
 }
 
