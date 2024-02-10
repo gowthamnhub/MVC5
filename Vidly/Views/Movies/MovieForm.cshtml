@@ -47,7 +47,8 @@ else
         @Html.ValidationMessageFor(m => m.Movie.NumberInStock)
     </div>
     <button class="btn btn-primary rounded-2 mt-1 mb-1" type="submit">Save</button>
-    @Html.HiddenFor(m => m.Movie.Id)
+    @Html.Hidden("Movie.Id",0);
+    //@Html.HiddenFor(m => m.Movie.Id)
     @Html.AntiForgeryToken()
 }
 
