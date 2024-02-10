@@ -1245,6 +1245,50 @@ namespace Vidly.ViewModels
   }
 }
 
+Web API:
+---------
+	Before jumping on to that, lets review quickly ASP.Net MVC Architecture.
+	
+		"
+		When a request arrives at our application -> MVC framework -> hands over the request to the action method in a controller. 
+		"
+
+	This action method most of the times returns a View which is then parsed by razor engine and then eventually HTML markup is rendered to the client.
+	
+	So in this approach, HTML markup is generated on the server and then returned to the client.
+	There is also an alternative approach where the HTML markup can be generated on the client side, so instead of actions returning mark up and it can return raw data.
+	
+	But what is the advantage of just returning data and not HTML markup?
+		1. Uses less server resources as it hands of generating views to the client side.
+		2. Less Bandwidth: Minor performance improvement as returning data is little more faster than generating a view and returning it.
+		3. Can help serve muliple clients like (Mobile App, Web Client, Tablet App), support broad range of clients.
+		
+	We call these end points data services or web API as these just returns data not View.
+	These web APIs are not just for building Mobile Apps or Tablet App, but can be exposed to be consumed by third party Apps/Web sites to build new functionalities.
+	
+	Like Twitter, Youtube, Google exposes public data services which can be consumed by our applications.
+	Framework we use to build these data services is called "ASP.NET Web API". It follows the same architecture as ASP.Net MVC.
+	
+	So with these APIs, the data can be returned, we can use some jQuery pluggin to build the view using this data, we do not need to write much of client side code as using this pluggins automatically helps us for that.
+	
+RESTful Convention:
+--------------------
+	In this section, we will be creating Web APIs for Customer entity -> The endpoint would be as below;
+		
+		=> Get All 			- 		Http GET 	- 	api/customers
+		=> Get By Id 		- 		Http GET 	- 	api/customers/1 (id of the customer to be retrieved)
+		=> Add customer 	- 	 	Http POST  	- 	api/customers (customer data sent in the body)
+		=> Update Customer 	- 		Http PUT 	- 	api/customers/1 (id of the customer to be updated)
+		=> Delete Customer 	- 		Http DELETE - 	api/customers/1 (id of the customer to be deleted)
+		
+	This request type / convention and end points is a standard convention referred as RESTful convention.
+	REST - Representational State Transfer - this may not make any sense, as this was originally part of a thesis of a PhD student.
+		
+	But practically, the above are the basic request types and end point format can be seen across most of the Http services or Web APIs.
+
+		
+		
+		
 
 			
 			
