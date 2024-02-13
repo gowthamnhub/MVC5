@@ -1394,6 +1394,45 @@ namespace Vidly.Controllers.Api
 
 Next is Testing these APIs:
 ---------------------------
+	Simply in browser: 
+		https://localhost:44318/api/customers/ - Lists all customer in XML format
+		https://localhost:44318/api/customers/1 - fetch customer with id : 1
+		
+	But why in XML format? 
+	----------------------
+		Basically ASP.Net Web API has something called as Media formatter
+	
+	What does Media Formatter do?
+	------------------------------
+			
+			[Action Result Object] --> [Media Formatter] --> Serializes --> [Output]
+			
+			-> Whatever API action method returns will be serialized to format what client asks for.
+			This can be seen in Response headers in developer tools, content type property.
+			
+					Content-Type: application/xml; charset=utf-8
+
+			In this case, it is set to "application/xml" by default when Content-Type property is not set in the request headers, then it assumes it has to return in xml format.
+	
+		But when we use Postman, we can see the output either in Json or XML format.
+		Json is native for Javascript, it is neat and clean, it does not have any more noisy opening, closing tags as in XML and it is being used most widely.
+	
+	While testing, for GET and POST it did work without any issues. But for PUT and DELETE, had to add these in the web.config to make it work;
+		
+		<system.webServer>
+			<modules>
+				<remove name="WebDAVModule"/>
+			</modules>
+			<handlers>
+				<remove name="WebDAV" />
+				<remove name="ExtensionlessUrl-Integrated-4.0" />
+				<add name="ExtensionlessUrl-Integrated-4.0" path="*." verb="GET,HEAD,POST,DEBUG,DELETE,PUT" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
+			</handlers>
+		</system.webServer>
+
+Now all end points work well.
+
+Next we will talk couple of issues with design of our APIs.		
 		
  		
 		
