@@ -1432,7 +1432,17 @@ Next is Testing these APIs:
 
 Now all end points work well.
 
-Next we will talk couple of issues with design of our APIs.		
+Next we will talk couple of issues with design of our APIs.
+
+Data Transfer Objects
+----------------------
+	Right now there are some issues with our APIs, mainly it receives or returns the domain model objects (i.e., Customer) which can be frequently changed as part of implementing new features, like we might add some more fields (address, email, phone number etc.,) or renaming the existing fields can cause breaking change at the consumer's end which is more constly.
+
+	It is not allowed, so we need to keep contract changes as less frequent as possible (that goes into versioning of APIs) than domain model changes.
+
+	So obvious thing is not to use domain object in the API endpoints, and need some more middle layer object to transfer the data between API and Domain that is what called as DTO.
+
+	We will try it by mapping customer -> customerDto manually first then we see the next section where the mapping is done automatically (AutoMapper)	
 		
  		
 		
