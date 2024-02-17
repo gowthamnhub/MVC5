@@ -219,6 +219,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DateShouldBeAtleast2MonthsOld.cs" />
+    <Compile Include="Models\Dtos\CustomerDto.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\Minimum18YearsAge.cs" />

@@ -1444,8 +1444,37 @@ Data Transfer Objects
 
 	We will try it by mapping customer -> customerDto manually first then we see the next section where the mapping is done automatically (AutoMapper)	
 		
- 		
+ 		First lets create a CustomerDto -> with same properties of Customer.
+		And while saving map the customerDto properties to Customer entity and save it.
 		
+		Lets test if it works.
+		
+		Yes it works as expected.
+		
+Sample snippet: AddCustomer()
+------------------------------		
+	public Customer Add(CustomerDto customer)
+    {
+      if (!ModelState.IsValid)
+      {
+        throw new HttpResponseException(HttpStatusCode.BadRequest);
+      }
+
+      //Map customer Dto to customer properties
+      //we have to add customer to context.customers
+	  // This logic basically needs to be at domain side like facade/service file.
+      var newCustomer = new Customer
+      {
+        Name = customer.Name,
+        BirthDate = customer.BirthDate,
+        IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter,
+        MembershipType = customer.MembershipType,
+        MembershipTypeId = customer.MembershipTypeId
+      }; 
+      _context.Customers.Add(newCustomer);
+      _context.SaveChanges();
+      return newCustomer;
+    }
 		
 
 			
