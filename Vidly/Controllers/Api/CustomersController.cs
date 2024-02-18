@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using AutoMapper;
 using Vidly.Models;
 using Vidly.Models.DbContext;
 using Vidly.Models.Dtos;
@@ -22,20 +23,23 @@ namespace Vidly.Controllers.Api
       _context = context;
     }
     //api/customers
-    public IList<Customer> GetCustomers()
+    public IEnumerable<CustomerDto> GetCustomers()
     {
-      return _context.Customers.ToList();
+      return _context.Customers.ToList().Select(x => Mapper.Map<Customer, CustomerDto>(x));
     }
     //api/customers/1
-    public Customer GetById(int id)
+    public CustomerDto GetById(int id)
     {
       var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
-      return customer ?? throw new HttpResponseException(HttpStatusCode.NotFound);
+      if(customer == null)
+          throw new HttpResponseException(HttpStatusCode.NotFound);
+
+      return Mapper.Map<Customer, CustomerDto>(customer);
     }
 
     [HttpPost]
     //api/customers
-    public Customer Add(CustomerDto customer)
+    public CustomerDto Add(CustomerDto customerDto)
     {
       if (!ModelState.IsValid)
       {
@@ -44,17 +48,22 @@ namespace Vidly.Controllers.Api
 
       //Map customer Dto to customer properties
       //we have to add customer to context.customers
-      var newCustomer = new Customer
-      {
-        Name = customer.Name,
-        BirthDate = customer.BirthDate,
-        IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter,
-        MembershipType = customer.MembershipType,
-        MembershipTypeId = customer.MembershipTypeId
-      }; 
+      //var newCustomer = new Customer
+      //{
+      //  Name = customerDto.Name,
+      //  BirthDate = customerDto.BirthDate,
+      //  IsSubscribedToNewsletter = customerDto.IsSubscribedToNewsletter,
+      //  MembershipType = customerDto.MembershipType,
+      //  MembershipTypeId = customerDto.MembershipTypeId
+      //}; 
+      //instead of the above lines, when using AutoMapper
+      var newCustomer = Mapper.Map<CustomerDto, Customer>(customerDto);
       _context.Customers.Add(newCustomer);
       _context.SaveChanges();
-      return newCustomer;
+      
+      //Once saved, we return DTO object with Id generated for new customer.\
+      customerDto.Id = newCustomer.Id;
+      return customerDto;
     }
 
     [HttpPut]

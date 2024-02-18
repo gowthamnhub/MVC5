@@ -1476,9 +1476,71 @@ Sample snippet: AddCustomer()
       return newCustomer;
     }
 		
+AutoMapper
+-----------
+	Install package from Package Manager Console -> ALT + Y.
+		
+					install-package automapper -version:4.1
+		Once installed, we have to create a mapping profile which can inherit "Profile" an AutoMapper class having methods like CreateMap(), but lets see how are these being used.
+		
+		In its constructor method;
+		---------------------------
+			we use  Mapper.CreateMap<Customer, CustomerDto>();
+					Mapper.CreateMap<CustomerDto, Customer>();
+			
+			Mapper is a static class, having several methods -> CreateMap, DynamicMap, Map etc.,
+			
+			This is basically the main entry point for the AutoMapper for both creating Maps and Performing Maps.
+			
+	what it does internally?
+	-------------------------
+		When we call createMap class, it uses Reflection and scan the types and finds the properties of the both objects and maps them based on their property names, thats why AutoMapper is called Convention based mapping tool because it uses property names as convention to map objects.
+		
+	We need to load this profile when the application started.
+				Mapper.Initialize(c=> c.AddProfile<MappingProfile>());
+			
+Now the Add action becomes:
+---------------------------
+[HttpPost]
+ //api/customers
+ public CustomerDto Add(CustomerDto customerDto)
+ {
+   if (!ModelState.IsValid)
+   {
+     throw new HttpResponseException(HttpStatusCode.BadRequest);
+   }
 
-			
-			
+   //Map customer Dto to customer properties
+   //we have to add customer to context.customers
+   //var newCustomer = new Customer
+   //{
+   //  Name = customerDto.Name,
+   //  BirthDate = customerDto.BirthDate,
+   //  IsSubscribedToNewsletter = customerDto.IsSubscribedToNewsletter,
+   //  MembershipType = customerDto.MembershipType,
+   //  MembershipTypeId = customerDto.MembershipTypeId
+   //}; 
+   //instead of the above lines, when using AutoMapper
+   var newCustomer = Mapper.Map<CustomerDto, Customer>(customerDto); // This tells from CustomerDto -> Customer object
+   _context.Customers.Add(newCustomer);
+   _context.SaveChanges();
+   
+   //Once saved, we return DTO object with Id generated for new customer.\
+   customerDto.Id = newCustomer.Id;
+   return customerDto; //returns CustomerDto
+ }
+ 
+ 
+ GetById:
+ --------
+	public CustomerDto GetById(int id) //returns CustomerDto
+    {
+      var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+      if(customer == null)
+          throw new HttpResponseException(HttpStatusCode.NotFound);
+
+      return Mapper.Map<Customer, CustomerDto>(customer);//From Customer -> CustomerDto object.
+    }
 	
 
 	
