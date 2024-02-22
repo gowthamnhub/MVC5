@@ -72,11 +72,16 @@ namespace Vidly.Controllers.Api
     {
       var existingCustomer = _context.Customers.SingleOrDefault(c => c.Id == id);
       if (existingCustomer == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-      existingCustomer.Name = customer.Name;
-      existingCustomer.BirthDate = customer.BirthDate;
-      existingCustomer.MembershipTypeId = customer.MembershipTypeId;
-      existingCustomer.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
 
+      Mapper.Map(customer, existingCustomer);
+
+      //existingCustomer.Name = customer.Name;
+      //existingCustomer.BirthDate = customer.BirthDate;
+      //existingCustomer.MembershipTypeId = customer.MembershipTypeId;
+      //existingCustomer.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+
+      //Once saved, we return DTO object with Id generated for new customer.\
+      existingCustomer.Id = id;
       _context.SaveChanges();
       return existingCustomer;
 

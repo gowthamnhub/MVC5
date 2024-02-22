@@ -1543,6 +1543,22 @@ Now the Add action becomes:
     }
 	
 
+Verify it for GetAll and PUT, Delete methods?????? - done.
+	
+	Right now if we see the responses are in Pascal Casing as FirstLetter each word is "Capital".
+	
+	But most often in Javascript we consider the properties of response would be "camelCasing".
+Now, how do we enable camelCasing in our WebApiConfig to have our responses in "camelCasing"?
+
+Code Snippet:
+-------------
+	We take JsonFormatter serializer settings and set its contractResolver to CamelCasePropertyNamesContractResolver object.
+		
+		"
+			var settings = config.Formatters.JsonFormatter.SerializerSettings;
+			settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+		"
+ 
 	
 				
 					

@@ -7,7 +7,8 @@ using System.Web;
 namespace Vidly.Models.Dtos
 {
   public class CustomerDto
-  { public int Id { get; set; }
+  { 
+    public int Id { get; set; }
 
     [Required]
     [StringLength(255)]
