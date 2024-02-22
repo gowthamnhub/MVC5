@@ -1559,7 +1559,38 @@ Code Snippet:
 			settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 		"
  
-	
+Making the response more RestFul convention, right now for post also it returns with 200 status code, 
+that is success, but as per RestFul convention, it should be 201 Created.
+
+To make it that way, we can use IHttpActionResult interface as return assimilar to ActionResult in MVC. 	
+And for returning we can use helper methods offered by API Controller -> can use its overload methods to return response.
+
+Sample Add method:
+-------------------
+
+public IHttpActionResult Add(CustomerDto customerDto)
+{
+  if (!ModelState.IsValid)
+  {
+    return BadRequest(ModelState);//helper method, returns with Model validation messages.
+  }
+
+	-------------------
+	-------------------
+	-------------------
+  //instead of the above lines, when using AutoMapper
+  var newCustomer = Mapper.Map<CustomerDto, Customer>(customerDto);
+  _context.Customers.Add(newCustomer);
+  _context.SaveChanges();
+  
+  //Once saved, we return DTO object with Id generated for new customer.\
+  customerDto.Id = newCustomer.Id;
+  return Created(Request.RequestUri + customerDto.Id.ToString(),customerDto); //return with location of the new id created, actual customer object created.
+}
+
+
+
+
 				
 					
 					

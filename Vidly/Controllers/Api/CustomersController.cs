@@ -39,11 +39,11 @@ namespace Vidly.Controllers.Api
 
     [HttpPost]
     //api/customers
-    public CustomerDto Add(CustomerDto customerDto)
+    public IHttpActionResult Add(CustomerDto customerDto)
     {
       if (!ModelState.IsValid)
       {
-        throw new HttpResponseException(HttpStatusCode.BadRequest);
+        return BadRequest(ModelState);
       }
 
       //Map customer Dto to customer properties
@@ -63,17 +63,17 @@ namespace Vidly.Controllers.Api
       
       //Once saved, we return DTO object with Id generated for new customer.\
       customerDto.Id = newCustomer.Id;
-      return customerDto;
+      return Created(Request.RequestUri + customerDto.Id.ToString(),customerDto);
     }
 
     [HttpPut]
     //api/customers/1 (with request body) 
-    public Customer Update(int id, CustomerDto customer)
+    public CustomerDto Update(int id, CustomerDto customerDto)
     {
       var existingCustomer = _context.Customers.SingleOrDefault(c => c.Id == id);
       if (existingCustomer == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-      Mapper.Map(customer, existingCustomer);
+      Mapper.Map(customerDto, existingCustomer);
 
       //existingCustomer.Name = customer.Name;
       //existingCustomer.BirthDate = customer.BirthDate;
@@ -83,7 +83,9 @@ namespace Vidly.Controllers.Api
       //Once saved, we return DTO object with Id generated for new customer.\
       existingCustomer.Id = id;
       _context.SaveChanges();
-      return existingCustomer;
+
+      customerDto.Id = id;
+      return customerDto;
 
       //update each properties for the customer
       //instead of assigning these values individually, we can use tools to auto map these properties like AutoMapper.
