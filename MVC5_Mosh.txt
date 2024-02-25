@@ -1588,9 +1588,46 @@ public IHttpActionResult Add(CustomerDto customerDto)
   return Created(Request.RequestUri + customerDto.Id.ToString(),customerDto); //return with location of the new id created, actual customer object created.
 }
 
+Next is Exercise to Add APIs for Movies entity (CRUD)
 
+Design APIs end points - 15mins
+Design DTOs - 15mins
+Implement APIs (CRUD) - 20mins
+Testing in Post Man - 20mins.
 
+Design API End Points: (All returns IHttpActionResult)
+-----------------------
+	Get All - /api/movies
+	GetById - /api/movies/ideal
+	
+	Create  - /api/movie(s) (POST)
+	Update  - /api/movie(s)/id (PUT)
+	
+	Delete  - /api/movie(s)/id (DELETE)	
+	
+	
+Design DTOs:
+------------
+	We need to have Movie DTO to be passed from API payload which will get auto mapped to "Movie" properties via AutoMapper (Mapper.Map<MovieDTO, Movie>(source, destination).
 
-				
+	MovieDTO to have properties:
+	-----------------------------
+		int id, Name, ReleaseDate, NumberInStock, GenreId
+		
+	Tested the APIs for Movies (Get All, GetById, Create, Update, Delete) All looks to be working as expected.
+	And tested the case when removing the PUT, DELETE verbs from <handlers>	 <system.webServer> tags in 
+	web.config, PUT and DELETE does not work properly, also even the space matters, it has to be exactly as this below;
+		"
+		 <system.webServer>
+		 	<modules>
+		 		<remove name="WebDAVModule" />
+		 	</modules>
+		 	<handlers>
+		 		<remove name="WebDAV" />
+		 		<remove name="ExtensionlessUrl-Integrated-4.0" />
+		 		<add name="ExtensionlessUrl-Integrated-4.0" path="*." verb="GET,HEAD,POST,DEBUG,DELETE,PUT" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
+		 	</handlers>
+		 </system.webServer>
+		"
 					
 					
