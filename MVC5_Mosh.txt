@@ -1589,7 +1589,7 @@ public IHttpActionResult Add(CustomerDto customerDto)
 }
 
 Next is Exercise to Add APIs for Movies entity (CRUD)
-
+------------------------------------------------------
 Design APIs end points - 15mins
 Design DTOs - 15mins
 Implement APIs (CRUD) - 20mins
@@ -1630,4 +1630,64 @@ Design DTOs:
 		 </system.webServer>
 		"
 					
-					
+How to consume the APIs developed above in UI?
+-----------------------------------------------
+	In this section we are going to focus on client side development and how do we consume the APIs that we developed. We will use jQuery AJAX for consuming APIs, we will also use some of the useful jQuery plugins BootBox or displaying bootstrap dollar boxes, data tables or plain tables that have built in support for Pagination, Searching and Sorting.
+	
+We will add a DELETE button near the customer and on click of that we will call the API to delete the customer that is needed to be removed.
+
+1. We will add the DELETE button in the index form.
+2. Design it with required classes.
+3. Then write jquery function to call API and success function.
+
+Code Snippets:
+---------------
+Index.cshtml
+------------
+
+{
+    <table id="customers" class="table table-bordered table-hover">
+        <tr class="row">
+            <th class="col">Customer</th>
+            <th class="col">Membership Type</th>
+            <th class="col">Discount Rate</th>
+            <th class="col">Action</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr class="row">
+                <td class="col">@Html.ActionLink(item.Name, "Edit", new { id = item.Id })</td>
+                <td class="col">@item.MembershipType.Name</td>
+                <td class="col">@item.MembershipType.DiscountRate%</td>
+                <td class="col">
+                    <button data-customer-id="@item.Id" class="link-danger js-delete border-0 rounded-2">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function(){
+            $("#customers .js-delete").on("click", function () {
+                let button = $(this);
+                let isConfirmToDelete = confirm("Are you sure you want to delete the customer?");
+                if (isConfirmToDelete) {
+                    $.ajax({
+                        url: "/api/customers/" + button.attr('data-customer-id'),
+                        method: 'DELETE',
+                        success: function () {
+                            //delete the table row in UI
+                            button.closest('tr').remove();
+                            console.log('DELETED SUCCESSFULLY');
+                        }
+                    })
+                }
+            })
+        });
+    </script>    
+}	
+
+It calls the API and on success method -> it finds the respective row and removes it from UI.

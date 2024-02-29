@@ -14,11 +14,12 @@
 }
 else
 {
-    <table class="table table-bordered table-hover">
+    <table id="customers" class="table table-bordered table-hover">
         <tr class="row">
             <th class="col">Customer</th>
             <th class="col">Membership Type</th>
             <th class="col">Discount Rate</th>
+            <th class="col">Action</th>
         </tr>
         @foreach (var item in Model)
         {
@@ -26,9 +27,35 @@ else
                 <td class="col">@Html.ActionLink(item.Name, "Edit", new { id = item.Id })</td>
                 <td class="col">@item.MembershipType.Name</td>
                 <td class="col">@item.MembershipType.DiscountRate%</td>
+                <td class="col">
+                    <button data-customer-id="@item.Id" class="link-danger js-delete border-0 rounded-2">Delete</button>
+                </td>
             </tr>
         }
     </table>
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function(){
+            $("#customers .js-delete").on("click", function () {
+                let button = $(this);
+                let isConfirmToDelete = confirm("Are you sure you want to delete the customer?");
+                if (isConfirmToDelete) {
+                    $.ajax({
+                        url: "/api/customers/" + button.attr('data-customer-id'),
+                        method: 'DELETE',
+                        success: function () {
+                            //delete the table row in UI
+                            button.closest('tr').remove();
+                            console.log('DELETED SUCCESSFULLY');
+                        }
+                    })
+                }
+            })
+        });
+    </script>    
 }
 
 
