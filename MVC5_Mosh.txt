@@ -1683,6 +1683,7 @@ Index.cshtml
                             button.closest('tr').remove();
                             console.log('DELETED SUCCESSFULLY');
                         }
+						
                     })
                 }
             })
@@ -1691,3 +1692,69 @@ Index.cshtml
 }	
 
 It calls the API and on success method -> it finds the respective row and removes it from UI.
+
+Now the functionality is working, will see how to present it in better way using bootbox, then optimization of jQuery code.
+
+Bootstrap
+----------
+	Bootstrap is basically a CSS framework for building responsive and modern applications that looks good in Desktop, Tablet, Mobile devices.
+		
+	In this lecture, we will just see how to replace Javascript confirm box with bootstrap dialog that looks little more modern.
+		-> One way is to visit bootstrap documentation page and follow the steps to create a bootstrap dialog box.
+		-> The other way is to use library called BootBox.js which is an abstraction over Bootstrap provides number of simple functions that we can call to create different kinds of dialog boxes.
+		-> Read about it more from BootBox.js.com
+	Now to use BootBox in our project, open package manager console (alt + y) and run the below command
+			
+			install-package bootbox -version: 4.3.0
+	
+	After this is installed, we can see there is a BootBox.js is added to our scripts folder in the solution.
+
+	Modify the above js confirm code with below bootbox confirm box.
+	Unlike, js confirm bootbox confirm does not return any boolean value, instead it takes callback function which takes the bool parameter to decide on what condition what logic to be executed.
+	
+	But before using bootbox, we need to reference it in our solution, that we need to add it in BundleConfig.cs file.
+
+Code Snippet:
+--------------
+	<script>
+		$(document).ready(function(){
+			$("#customers .js-delete").on("click", function () {
+				let button = $(this);
+			
+				bootbox.confirm("Are you sure you want to delete the customer?", function (result) {
+					if (result) {
+						$.ajax({
+							url: "/api/customers/" + button.attr('data-customer-id'),
+							method: 'DELETE',
+							success: function () {
+								//delete the table row in UI
+								button.closest('tr').remove();
+								console.log('DELETED SUCCESSFULLY');
+							}
+						});
+					}                    
+				});
+			})
+		});
+	</script>  	
+
+BundleConfig.cs:
+----------------
+ public static void RegisterBundles(BundleCollection bundles)
+ {
+   bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+               "~/Scripts/jquery-{version}.js"));
+
+   bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
+               "~/Scripts/jquery.validate*"));
+   
+   bundles.Add(new Bundle("~/bundles/bootstrap").Include(
+           "~/Scripts/bootstrap.js",
+           "~/Scripts/bootbox.js"
+           ));
+		   
+    ----------------
+	----------------	
+ }	
+ 
+ 

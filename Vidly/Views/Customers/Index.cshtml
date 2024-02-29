@@ -41,18 +41,25 @@ else
         $(document).ready(function(){
             $("#customers .js-delete").on("click", function () {
                 let button = $(this);
-                let isConfirmToDelete = confirm("Are you sure you want to delete the customer?");
-                if (isConfirmToDelete) {
-                    $.ajax({
-                        url: "/api/customers/" + button.attr('data-customer-id'),
-                        method: 'DELETE',
-                        success: function () {
-                            //delete the table row in UI
-                            button.closest('tr').remove();
-                            console.log('DELETED SUCCESSFULLY');
-                        }
-                    })
-                }
+                //let isConfirmToDelete = confirm("Are you sure you want to delete the customer?");
+               
+                bootbox.confirm("Are you sure you want to delete the customer?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/customers/" + button.attr('data-customer-id'),
+                            method: 'DELETE',
+                            success: function () {
+                                //delete the table row in UI
+                                button.closest('tr').remove();
+                                console.log('DELETED SUCCESSFULLY');
+                            }
+                        });
+                    }                    
+                });
+
+                //if (isConfirmToDelete) {
+                   
+                //}
             })
         });
     </script>    
