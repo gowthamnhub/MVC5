@@ -15,30 +15,37 @@
 else
 {
     <table id="customers" class="table table-bordered table-hover">
-        <tr class="row">
-            <th class="col">Customer</th>
-            <th class="col">Membership Type</th>
-            <th class="col">Discount Rate</th>
-            <th class="col">Action</th>
-        </tr>
-        @foreach (var item in Model)
-        {
+        <thead>
             <tr class="row">
-                <td class="col">@Html.ActionLink(item.Name, "Edit", new { id = item.Id })</td>
-                <td class="col">@item.MembershipType.Name</td>
-                <td class="col">@item.MembershipType.DiscountRate%</td>
-                <td class="col">
-                    <button data-customer-id="@item.Id" class="link-danger js-delete border-0 rounded-2">Delete</button>
-                </td>
+                <th class="col">Customer</th>
+                <th class="col">Membership Type</th>
+                <th class="col">Discount Rate</th>
+                <th class="col">Action</th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="row">
+                    <td class="col">@Html.ActionLink(item.Name, "Edit", new { id = item.Id })</td>
+                    <td class="col">@item.MembershipType.Name</td>
+                    <td class="col">@item.MembershipType.DiscountRate%</td>
+                    <td class="col">
+                        <button data-customer-id="@item.Id" class="link-danger js-delete border-0 rounded-2">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }
 
 @section Scripts
 {
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
+
+            $('#customers').DataTable();
+
             $("#customers").on("click",".js-delete", function () {
                 let button = $(this);
                

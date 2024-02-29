@@ -1777,4 +1777,76 @@ BundleConfig.cs:
 		 
 		 childSelector	Optional. Specifies that the event handler should only be attached to the specified child elements (and not the selector itself, like the deprecated delegate() method).
 		 
+DataTables Plug-in:
+--------------------
+Next we will see a useful jQuery pluggin called DataTables which gives the functionalities of Searching, Sorting, Pagination right out of the box.
+
+We will use DataTables plugin to add Pagination, Sorting, Filtering features to our Customers table.
+
+How to install DataTables plugin to our solution?
+--------------------------------------------------
+		install-package jquery.datatables -version:1.10.11 (Package Manager Console - ALT + Y)
+	
+	Once this is installed, we can see number of js files and css files related to DataTables get added in the Scripts and Content folders.
+	
+	All the difference js files are just the extension of core datatables js file which is - 
+			
+			"~/Scripts/DataTables/jquery.dataTables.js"
+			"~\Scripts\DataTables\dataTables.bootstrap.js" and
+			"~\Content\DataTables\css\dataTables.bootstrap.css"
+			
+	These are the ones we are going to make use of in our solution - to reference these we need to add it in our bundle config.cs.
+	
+	After adding the script files and style files in BundleConfig.cs -> it was still giving some error, when I googled, it looks like the DataTables needs well formatted html table to make it work as expected, I was missing <thead>, <tbody> tags after adding it started working, but not in full fledged manner as some icons like sorting was not appearing properly. Pagination also not showing properly but the functionality does seem to be working properly.
+	
+Code snippets:
+--------------
+BundleConfig.cs
+----------------
+public static void RegisterBundles(BundleCollection bundles)
+{
+/*had to replace ScriptBundle with Bundle to make it work*/
+  bundles.Add(new Bundle("~/bundles/lib").Include(
+          "~/Scripts/jquery-{version}.js",               
+           "~/Scripts/bootstrap.js",
+           "~/Scripts/bootbox.js",
+           "~/Scripts/DataTables/jquery.dataTables.js",
+           "~/Scripts/DataTables/dataTables.bootstrap.js"
+          ));
+
+
+	----------------------
+	----------------------
+
+  bundles.Add(new StyleBundle("~/Content/css").Include(
+            "~/Content/bootstrap-pulse.css",
+            "~/Content/DataTables/css/dataTables.bootstrap.css",
+            "~/Content/site.css"));
+}
+
+Layout.cshtml
+-------------
+  @Scripts.Render("~/bundles/lib")	
+  
+Index.cshtml:
+-------------
+Basic way to use DataTables is simply get the element table and call DataTable() function on it.
+	<script>
+		$(document).ready(function () {	
+			$('#customers').DataTable();
+			-----------
+			-----------
+			-----------
+		});
+	</script>
+
+How does DataTable work internally to perform Sorting, Filtering, Pagination -> it basically takes the view that is returned from server and DataTables plugin will extract our data from DOM elements and construct its own list of data(customers), so it will maintain a bunch of json objects on the client and on searching, sorting it use those json objects to perform and display appropriately.
+
+What is the issue with this simple approach of using DataTable function on the element?
+---------------------------------------------------------------------------------------
+	So now we can understand DataTables use client resources to parse the HTML data rendered from server to form the json objects to perform these operations for us. This may not be an issue for smaller dataset, but if it has few hundreds or thousands of data then this become an issue for the client.
+	
+	To resolve of it instead of we sending the HTML markup and DataTable to parse and do all the above things, we send only json data which is lightweight (from API) and hand it over to DataTables to build the HTML markup to display to the client.
+				
+			
 		 
