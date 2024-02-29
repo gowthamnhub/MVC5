@@ -1757,4 +1757,24 @@ BundleConfig.cs:
 	----------------	
  }	
  
+ Next we will optimize little bit our jQuery code. Lets see what he covers in this section.
  
+ jQuery optimization:
+ --------------------
+	Check this line of code: 
+	
+	$("#customers .js-delete").on("click", function () {
+		//delete api called and logic
+		
+	});
+
+	what does this line do? -> For each customer with .js-delete button creates a seperate handler function in the memory, imagine when we have more customers then we are going to consume more memory.
+	
+	So when we alter this method to "$("#customers").on("click", ".js-delete", function () {"
+	So we will have one handler created for entire "#customers" element and for the given child selector only it will attach the handler event, but in memory only one handler event created. See below; 
+	
+	     $(selector).on(event,childSelector,data,function,map)
+		 
+		 childSelector	Optional. Specifies that the event handler should only be attached to the specified child elements (and not the selector itself, like the deprecated delegate() method).
+		 
+		 
