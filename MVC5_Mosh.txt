@@ -1892,4 +1892,98 @@ dataSrc -> mentions the data for all the rows
 columns -> specifies data for each cell, if directly the data property will be displayed, then simply property (from response) is fine for data, but if it needs some manipulation/customization like in customer's name case to be an anchor tag, it takes render function which takes 3 parameters data, type, row object and returns the result HTML markup to be bound to the cell.
 
 Right now, membershipType.name or discountRate throws null reference as these properties does not come from API, that we will see next session how to return hierarchical data from API and can be used.
+
+
+				"DataTables -> Documentation web site - https://datatables.net/examples/index"
+				
+Returning Hierarchical Data:
+-----------------------------
+Currently from customers API, it returns membershipType with null, we need it to return membershipType object so that we can display the details in View.
+
+	How do we load membershipType details with Customers, for that we need to use System.Data.entity.Include() method for eager loading the membershipType details when the Customers data is loaded.
+	
+	But current CustomersDto class has MembershipType property which is a domain entity, the purpose of having Dto is to have some seperation between Dto and Domain entity so that any change in Domain entity does not impact the contract for the Client/Consumer.
+	
+	So we need to change MembershipType also as MembershipTypeDto with just needed properties in this case, Id, name, discountRate.
+	
+Code snippet:
+-------------
+API Customers Controller:
+--------------------------
+  public IEnumerable<CustomerDto> GetCustomers()
+  {
+    return _context.Customers
+      .Include(c => c.MembershipType)
+      .ToList()
+      .Select(x => Mapper.Map<Customer, CustomerDto>(x));
+  }
+
+MembershipTypeDto:
+------------------
+namespace Vidly.Models.Dtos
+{
+  public class MembershipTypeDto
+  {
+    public byte Id { get; set; }
+    public string Name { get; set; }
+    public byte DiscountRate { get; set; }
+  }
+}
+
+DataTables: Removing Records
+----------------------------
+When trying to delete from the Grid, able to remove the record from Grid using our already existing logic for removing <tr> on click of "Delete".
+
+But there seems to be a bug, after removal of that row also, when I do search for the deleted record, it still appears in the Grid? Why? How can it be resolved?
+
+Ok it is because, we just remove the tr from DOM tree, but as we learnt earlier, DataTables maintains json object of data set to perform the operations like "Sorting", "Filtering", "Pagination", we need to remove the respective record from the dataTable list. 
+
+Lets see how we do it?
+-----------------------
+ There are several useful methods and events provided by DataTables library to perform this kind of operations.
+												
+ To perform this, we need a reference to our DataTable;
+
+Code snippet:
+--------------
+ $(document).ready(function () {
+	var table = $('#customers').DataTable({
+     ajax: {
+         -----
+		 -----	
+     },
+     columns: [
+         {
+			-----
+         }
+     ]
+	});
+});
+
+Delete Handler:
+---------------
+
+$("#customers").on("click", ".js-delete", function () {
+    let button = $(this);
+
+    bootbox.confirm("Are you sure you want to delete the customer?", function (result) {
+        if (result) {
+            $.ajax({
+                url: "/api/customers/" + button.attr('data-customer-id'),
+                method: 'DELETE',
+                success: function () {
+                    //delete the row from data table and re draw it in UI
+                    table.row(button.parents('tr')).remove().draw();
+                    console.log('DELETED SUCCESSFULLY');
+                }
+            });
+        }
+    });
+ })
+});
+
+	
+
+
+
 		 

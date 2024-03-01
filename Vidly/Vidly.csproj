@@ -225,6 +225,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DateShouldBeAtleast2MonthsOld.cs" />
     <Compile Include="Models\Dtos\CustomerDto.cs" />
+    <Compile Include="Models\Dtos\MembershipTypeDto.cs" />
     <Compile Include="Models\Dtos\MovieDto.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\MembershipType.cs" />
