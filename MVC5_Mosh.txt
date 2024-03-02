@@ -1982,8 +1982,56 @@ $("#customers").on("click", ".js-delete", function () {
  })
 });
 
-	
+Discussion Points:
+-------------------
+1. Performance aspect of DataTables Plug-in
+---------------------------------------------
+		-> Because what it does is it takes all the data from API and stores in memory / internally to perform the operations sorting, searching, filtering, pagination.
+		-> This works well if the records to be maintained in memory is less, but if the object returned from API is fat then it is problematic to even handle few thousand records as it takes a lot of resources.
 
+		-> If the objects result are very higher, its better to perform these operations (sorting, searching, pagination) in the server side and then enable server side processing in DataTables.
+		
+		-> This we need to go through seperately as it is beyond the scope of this course.
 
+2. Seperation of Concerns
+--------------------------
+		-> As from the above code, it is clear the Javascript code includes both data accessing (API call) as well as UI formation together, better to keep it both seperated in different files. That we need to try.
+
+		This has been done and seperated these javascript code to different files, and those files referenced in the cshtml file.
+			"
+				@section Scripts
+				{
+					<script src="~/Scripts/CustomerIndex.js"></script>
+					<script src="~/Scripts/CustomersDataAccess.js"></script>
+				}
+			"
+Single Page Applications:(SPAs)
+--------------------------------
+With our new implementation, we are generating the customers table on the client or other words we are generating a part of the view on the client.
+
+Now we could take this to next level by generating entire view/page on the client.
+
+So with this architecture, in the server side we will have a number of APIs purely responsible for getting/modifying the data, and the view will be generated on the client side, which means we will not be using MVC Razor views.
+
+Applications built with this kind of architecture are called Single Page Applications.
+
+In a Single Page Application, when a user click on something instead of sending a request to server to get the entire mark up for the new page, we make an ajax call to call an API to get the required data and generate the view on the client.
+
+And then we replace the view in the main content area with another / new view.   
+
+So essentially, we have a single page whose content gets updated as the user navigates from one area to another.
+Thats why we call these Single Page Applications.
+
+Benefits:
+---------
+Faster & Smoother - Because we don't have to reload the entire page for one page to another page navigation. so it does not flicker.
+
+Examples:
+----------
+Gmail, Google+ and outlook
+
+Frameworks like Angular, Ember, Backbone.js -> These provide few abstractions which makes little more easier to build single page application.
+
+If we want to build a Single Page Application on a server we can use ASP.Net Web APIs to build bunch of RestFul APIs and on the client we can use one of these frameworks to generate UI.
 
 		 
