@@ -2034,4 +2034,11 @@ Frameworks like Angular, Ember, Backbone.js -> These provide few abstractions wh
 
 If we want to build a Single Page Application on a server we can use ASP.Net Web APIs to build bunch of RestFul APIs and on the client we can use one of these frameworks to generate UI.
 
+Exercise
+---------
+To make the Movies grid into Data table.
+1. Lets make simple DataTable by using DataTable method() for movies table. (movies.cshtml) - 10mins.
+2. Due to the issue with getting the entire mark up and parsing it to Data table, lets change it to call the API and form the mark up using the columns property (data, render) and methods. - 15 - 20mins.
+3. Ultimately get rid of the movies controller to access repository, passing models to view as these are being currently handled at client side(DataTables plugin). - 10 - 15mins.
+4. Testing - 15mins.
 		 

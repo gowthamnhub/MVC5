@@ -26,4 +26,15 @@
       }
     ]
   });
+
+  $("#customers").on("click", ".js-delete", function () {
+    let button = $(this);
+
+    bootbox.confirm("Are you sure you want to delete the customer?", function (result) {
+      if (result) {
+        //delete the row from data table and re draw it in UI
+       customerDataAccess.delete(button.attr('data-customer-id'), button, table);
+      }
+    });
+  });
 });

@@ -24,7 +24,7 @@ namespace Vidly.Controllers.Api
     {
       _context = context;//Dependency injection is not working
     }
-    public IHttpActionResult Get()
+    public IHttpActionResult GetAll()
     {
       var movies = _context.Movies.ToList();
       var moviesDto = new List<MovieDto>();

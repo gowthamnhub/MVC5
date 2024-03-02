@@ -6,34 +6,32 @@
 }
 
 <h2>Movies</h2>
-@Html.ActionLink("New Movie", "New",null, new {@class="btn btn-primary rounded-2"} )
+@Html.ActionLink("New Movie", "New", null, new { @class = "btn btn-primary rounded-2" })
 
-<table class="table table-hover table-bordered">
-    <tr>
-        <th>Movie</th>
-        <th>Genre</th>
-    </tr>
-    @foreach (var item in Model)
-    {
+<table id="movies" class="table table-hover table-bordered">
+    <thead>
         <tr>
-            <td> @Html.ActionLink(item.Name, "Edit", new {id=@item.Id})</td>
-            <td>@item.Genre.Name</td>
+            <th>Movie</th>
+            <th>Genre</th>
+            <th>Action</th>
         </tr>
-    }
-    
+    </thead>
+    <tbody>
+        @*@foreach (var item in Model)
+            {
+                <tr>
+                    <td> @Html.ActionLink(item.Name, "Edit", new { id = @item.Id })</td>
+                    <td>@item.Genre.Name</td>
+                </tr>
+            }*@
+    </tbody>
 </table>
 
-
-@*@foreach (var item in (List<Movie>)ViewData["movies"])
-    {
-        <h5>@item.Name</h5>
-    }*@
-
-@*@foreach (var item in ViewBag.movies)
+@section Scripts
 {
-    <h5>@item.Name</h5>
-}*@
-
+    <script src="~/Scripts/Movies/MoviesIndex.js"></script>
+    <script src="~/Scripts/Movies/MoviesDataAccess.js"></script>
+}
 
 
 
