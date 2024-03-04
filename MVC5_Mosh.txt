@@ -2041,4 +2041,33 @@ To make the Movies grid into Data table.
 2. Due to the issue with getting the entire mark up and parsing it to Data table, lets change it to call the API and form the mark up using the columns property (data, render) and methods. - 15 - 20mins.
 3. Ultimately get rid of the movies controller to access repository, passing models to view as these are being currently handled at client side(DataTables plugin). - 10 - 15mins.
 4. Testing - 15mins.
+
+Done with the changes, there were few more bug with respect to delete button, resolved and pushed to branch.
+
+Authentication and Authorization:
+---------------------------------
+	In this section, we are going to add Authentication and Authorization to our application using ASP.Net Identity framework, will learn how ASP.Net Identity works under the hood and how it can be customized for our application.
+	
+The Vidly application is supposed to be running in a video rental store, and the list of customers, movies, rental details will be managed/monitored by a user in the store. 
+
+Mainly we don't want any user in the store to access customer/movie details and modify it, we want it to be managed only by the Store Manager.
+So first of all, we want restrict this capabilities in our application to be only available for logged in users.
+So adding/updating/deleting movie or customer to be only available for person who has store manager role.
+
+If any one can do any of the above operation, then it would be hard to manage/track who does what? would become tedious for customer service. So it is a problem that can be addressed with the help of Authentication and Authorization.
+
+
+Authentication Options:
+-----------------------
+We have 4 different options when creating ASP.Net project ->
+	1. No authentication 
+		-> used for applications don't need any authentication, can be accessible to anonymous users.
+	2. Individual User Accounts 
+		-> Default authentication option for ASP.Net MVC projects, Suitable for internet web sites where we provide form for user logins, with this we can enable social logins as well.
+	3. Organizational Accounts 
+		-> it is useful if we want to enable Single sign on for internal and cloud apps using Active Directory.
+	4. Windows Authentication 
+		-> useful for intranet application, where when user logged in to desktop/network the user would be automatically authenticated to use the application.
+
+	In these set, Individual User Accounts is the most common one, so we will be going through this in detail in the rest of the sections.		
 		 
