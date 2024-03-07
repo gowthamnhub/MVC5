@@ -2069,5 +2069,80 @@ We have 4 different options when creating ASP.Net project ->
 	4. Windows Authentication 
 		-> useful for intranet application, where when user logged in to desktop/network the user would be automatically authenticated to use the application.
 
-	In these set, Individual User Accounts is the most common one, so we will be going through this in detail in the rest of the sections.		
+	In these set, Individual User Accounts is the most common one, so we will be going through this in detail in the rest of the sections.
+
+Lets try to implement ASP.Net Identity in our project as it is currently not implemented;
+Trying to view different tutorials to do that, lets see if it can be implemented.
+		
+		https://www.linkedin.com/pulse/implementing-aspnet-identity-net-core-step-by-step-guide-rahat-akhter/
+	
+Basically, Microsoft Identity is a powerful framework for implementing authentication and authorization features in ASP.Net Core applications. Though this is not a .Net core project, lets give a try.
+
+Install Microsoft Identity packages
+-------------------------------------
+	-> Microsoft.AspNetCore.Identity.EntityFrameworkCore
+	
+	I checked from https://github.com/mosh-hamedani/vidly-mvc-5/blob/master/Vidly/packages.config
+	
+	it is installed - "Microsoft.AspNet.Identity.EntityFramework" - installed from package manager.
+			-> This has the EF implementation of ASP.Net Identity which will persist the ASP.Net Identity data and schema to SQL server.
+	
+	-> Microsoft.EntityFrameworkCore.SqlServer - does not look to be the case with .Net framework.
+	
+Configure the Database Context
+-------------------------------
+	This talks about adding the connectionString in appSettings.json file and related things. So this also does not seem to be case with .net framework.
+
+Create the Identity Database Context
+-------------------------------------
+--> The above things did not work. Just for reference not deleting from notes.
+
+The below looks to be best fit document for implementing Identity in ASP.Net Applications (not core)
+------------------------------------------------------------------------------------------------
+
+https://learn.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity	
+
+There are some points/areas need to dig more for understanding;
+
+ASP.NET Identity uses OWIN Authentication for log-in/log-out of users in the web site. This means that instead of using FormsAuthentication to generate the cookie, the application uses OWIN CookieAuthentication to do that.
+
+"Microsoft.AspNet.Identity.EntityFramework" 
+	-> This has the EF implementation of ASP.Net Identity which will persist the ASP.Net Identity data and schema to SQL server.
+	
+"Microsoft.AspNet.Identity.Core"	
+	-> This has the core interfaces for ASP.Net Identity. This package can be used to write implementation for ASP.Net Identity that targets different persistent stores such as Azure Table Storage, NoSQL etc.,
+
+"Microsoft.AspNet.Identity.Owin"
+	-> This package contains functionality that is used to plug in OWIN authentication with ASP.Net Identity in ASP.Net applications. This is used when you add sign in functionality to your application and call into OWIN Cookie Authentication middleware to generate a cookie.	
+	
+Ok after this first make our VidlyDbContext class to inherit from Microsoft.AspNet.Identity.EntityFramework.IdentityDbContext, instead of System.Data.Entity.IdentityDbContext
+
+This class IdentityDbContext class provides all the Identity related tables to our application store (SQL server in this case)
+
+Had to go through different video/stack overflow to get some ways to make it work. (had to spend 2 - 3 days)
+
+When add-migrations for Identity tables - was getting below error;
+	-> alter table alter column failed because column 'genre_id' does not exist in table 'movies' in entity framework
+	
+		Ran the command "Get-Migrations" - listed what are all the migrations are applied before.
+		in that this specific migration was not listed - 
+				202401300306325_Undoed GenreId to Movie Model
+				202402070204484_VersionRevertedBackToTip
+		
+Not sure why? If I have not run the migration and update-database for these migrations.
+
+So now I did exclude them from the project and run add-migration "Identity Added", it started working fine and database updated. Identity tables are added to the DB (AspNetUsers, AspNetRoles, AspNetUserRoles, AspNetUserClaims, AspNetUserLogins)
+
+Tested the basic scenarios (Customer, Movie - CRUD) it works fine.
+
+Now next is to add the functionalities for Registering, Login the user. Need to add the respective controllers, changes in UI.
+		
+
+
+	
+	
+	
+	
+
+	
 		 

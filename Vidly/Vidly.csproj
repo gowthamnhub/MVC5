@@ -55,12 +55,39 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Identity.EntityFramework.2.2.4\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Identity.Owin.2.2.4\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -157,8 +184,10 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Api\CustomersController.cs" />
     <Compile Include="Controllers\Api\MoviesController.cs" />
@@ -201,9 +230,9 @@
     <Compile Include="Migrations\202401271637335_Populating-Genres.designer.cs">
       <DependentUpon>202401271637335_Populating-Genres.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202401300306325_Undoed GenreId to Movie Model.cs" />
-    <Compile Include="Migrations\202401300306325_Undoed GenreId to Movie Model.designer.cs">
-      <DependentUpon>202401300306325_Undoed GenreId to Movie Model.cs</DependentUpon>
+    <Compile Include="Migrations\202401271641152_DataAnnotation-Added-Movie-Properties.cs" />
+    <Compile Include="Migrations\202401271641152_DataAnnotation-Added-Movie-Properties.Designer.cs">
+      <DependentUpon>202401271641152_DataAnnotation-Added-Movie-Properties.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202401301611441_Added GenreId property to Movie class.cs" />
     <Compile Include="Migrations\202401301611441_Added GenreId property to Movie class.designer.cs">
@@ -213,15 +242,17 @@
     <Compile Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.designer.cs">
       <DependentUpon>202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202402070204484_VersionRevertedBackToTip.cs" />
-    <Compile Include="Migrations\202402070204484_VersionRevertedBackToTip.designer.cs">
-      <DependentUpon>202402070204484_VersionRevertedBackToTip.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\202402100133348_Made Name field a required, NumberInStock a int from short.cs" />
     <Compile Include="Migrations\202402100133348_Made Name field a required, NumberInStock a int from short.designer.cs">
       <DependentUpon>202402100133348_Made Name field a required, NumberInStock a int from short.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403070141338_Identity added.cs" />
+    <Compile Include="Migrations\202403070141338_Identity added.designer.cs">
+      <DependentUpon>202403070141338_Identity added.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationRole.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DateShouldBeAtleast2MonthsOld.cs" />
     <Compile Include="Models\Dtos\CustomerDto.cs" />
@@ -236,6 +267,7 @@
     </Compile>
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\MovieCustomersViewModel.cs" />
     <Compile Include="ViewModels\CustomerFormViewModel.cs" />
     <Compile Include="ViewModels\MovieFormViewModel.cs" />
@@ -540,8 +572,8 @@
     <EmbeddedResource Include="Migrations\202401271637335_Populating-Genres.resx">
       <DependentUpon>202401271637335_Populating-Genres.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202401300306325_Undoed GenreId to Movie Model.resx">
-      <DependentUpon>202401300306325_Undoed GenreId to Movie Model.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202401271641152_DataAnnotation-Added-Movie-Properties.resx">
+      <DependentUpon>202401271641152_DataAnnotation-Added-Movie-Properties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202401301611441_Added GenreId property to Movie class.resx">
       <DependentUpon>202401301611441_Added GenreId property to Movie class.cs</DependentUpon>
@@ -549,11 +581,11 @@
     <EmbeddedResource Include="Migrations\202401310139196_GenreId changed to int type in Movie to match Id in Genre class.resx">
       <DependentUpon>202401310139196_GenreId changed to int type in Movie to match Id in Genre class.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202402070204484_VersionRevertedBackToTip.resx">
-      <DependentUpon>202402070204484_VersionRevertedBackToTip.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202402100133348_Made Name field a required, NumberInStock a int from short.resx">
       <DependentUpon>202402100133348_Made Name field a required, NumberInStock a int from short.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403070141338_Identity added.resx">
+      <DependentUpon>202403070141338_Identity added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
