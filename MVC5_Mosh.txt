@@ -2136,9 +2136,8 @@ So now I did exclude them from the project and run add-migration "Identity Added
 Tested the basic scenarios (Customer, Movie - CRUD) it works fine.
 
 Now next is to add the functionalities for Registering, Login the user. Need to add the respective controllers, changes in UI.
-		
 
-
+Have added the Account Controller with basic details, Included the Register, Login button in NavBar, Layout.cshtml file.
 	
 	
 	
